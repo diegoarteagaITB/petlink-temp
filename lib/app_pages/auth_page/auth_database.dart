@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:petlink_flutter_app/database/connection.dart';
 import 'package:postgres/postgres.dart';
 
 class AuthService {
@@ -35,7 +34,7 @@ class AuthService {
       );
       return result.affectedRowCount > 0;
     } catch (e) {
-      print("Error en el registro: $e");
+      debugPrint("Error en el registro: $e");
       return false;
     }
   }

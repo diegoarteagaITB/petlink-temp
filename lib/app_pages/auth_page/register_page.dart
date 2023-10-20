@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:petlink_flutter_app/app_pages/auth_page/auth_database.dart';
 import 'package:petlink_flutter_app/app_pages/auth_page/widget/custom_textfield.dart';
 import 'package:petlink_flutter_app/database/connection.dart';
-import 'package:postgres/postgres.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
