@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 Future<List<Pet>> fetchPets() async {
   final response = await http.get(
-      Uri.parse('http://172.30.1.199:8080/petlink/pets/inadoption'),
+      Uri.parse('http://172.30.3.25:8080/petlink/pets/inadoption'),
       headers: {"Content-Type": "application/json"});
 
   final List body = json.decode(response.body);
