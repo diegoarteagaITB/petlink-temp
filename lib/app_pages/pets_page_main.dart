@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:petlink_flutter_app/app_pages/pets_page/widget/search_view_filter.dart';
+import 'package:petlink_flutter_app/app_pages/widgets/search_view_filter.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
 import 'package:http/http.dart' as http;
 

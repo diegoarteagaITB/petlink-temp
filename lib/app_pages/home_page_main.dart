@@ -1,8 +1,8 @@
 import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:petlink_flutter_app/app_pages/account_page/account_page_main.dart';
-import 'package:petlink_flutter_app/app_pages/pets_page/pets_page_main.dart';
-import 'package:petlink_flutter_app/app_pages/user_home_page/user_home_page.dart';
+import 'package:petlink_flutter_app/app_pages/account_page_main.dart';
+import 'package:petlink_flutter_app/app_pages/pets_page_main.dart';
+import 'package:petlink_flutter_app/app_pages/user_home_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});

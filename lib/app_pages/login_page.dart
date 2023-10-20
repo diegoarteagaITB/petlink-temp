@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:petlink_flutter_app/app_pages/auth_page/auth_database.dart';
-import 'package:petlink_flutter_app/app_pages/auth_page/widget/custom_textfield.dart';
-import 'package:petlink_flutter_app/database/connection.dart';
-import 'package:petlink_flutter_app/home_page_main.dart';
+import 'package:petlink_flutter_app/app_pages/widgets/custom_textfield.dart';
+import 'package:petlink_flutter_app/database/connection/connection.dart';
+import 'package:petlink_flutter_app/database/dao/users_dao.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -81,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(10),
             child: TextButton(
               onPressed: () {
-                handleLogin(context, AuthService(myDatabase.connection));
+                handleLogin(context, UserDao(myDatabase.connection));
               },
               child: Container(
                 width: 200,
@@ -136,26 +135,18 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<bool?> handleLogin(
-      BuildContext context, AuthService authService) async {
-    final username = emailController.text;
+  Future<bool?> handleLogin(BuildContext context, UserDao userDao) async {
+    final email = emailController.text;
     final password = passwordController.text;
 
-    if (authService.isValidCredentials(username, password)) {
-      final success = await authService.authenticateUser(username, password);
-      if (success == true) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Datos válidos')));
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MyHomePage()),
-        );
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Datos inválidos')));
-        return success;
-      }
+    if (!userDao.isValidEmail(email)) {
+      return false;
+    } else if (!userDao.isValidPassword(password)) {
+      return false;
+    } else if (!userDao.isValidCredentials(email, password)) {
+      return false;
+    } else {
+      return true;
     }
-    return null;
   }
 }

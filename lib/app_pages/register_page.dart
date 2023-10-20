@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:petlink_flutter_app/app_pages/auth_page/auth_database.dart';
-import 'package:petlink_flutter_app/app_pages/auth_page/widget/custom_textfield.dart';
-import 'package:petlink_flutter_app/database/connection.dart';
+import 'package:petlink_flutter_app/app_pages/widgets/custom_textfield.dart';
+import 'package:petlink_flutter_app/database/connection/connection.dart';
+import 'package:petlink_flutter_app/database/dao/users_dao.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -83,11 +83,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     final email = emailController.text;
                     final password = passwordController.text;
 
-                    if (AuthService(myDatabase.connection)
-                            .isValidEmail(email) &&
-                        AuthService(myDatabase.connection)
+                    if (UserDao(myDatabase.connection).isValidEmail(email) &&
+                        UserDao(myDatabase.connection)
                             .isValidPassword(password)) {
-                      final success = await AuthService(myDatabase.connection)
+                      final success = await UserDao(myDatabase.connection)
                           .registerUser(email, password);
                       if (success) {
                         ScaffoldMessenger.of(context).showSnackBar(

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 
-class AuthService {
-  final PostgreSQLConnection _connection;
+class UserDao {
+  // Database declaration
+  final PostgreSQLConnection _database;
 
-  AuthService(this._connection);
+  UserDao(this._database);
 
+  // User checks
   bool isValidEmail(String email) {
     final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
     return emailRegExp.hasMatch(email);
@@ -17,15 +19,23 @@ class AuthService {
 
   bool isValidCredentials(String username, String password) {
     if (username.isEmpty || password.isEmpty) {
-      return false; // Los campos no deben estar vacíos.
+      return false;
     }
-
     return true;
   }
 
+  bool userNotExists(String email, String password) {
+    if (loginUser(email, password) == true) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // Function to sign up
   Future<bool> registerUser(String email, String password) async {
     try {
-      final result = await _connection.query(
+      final result = await _database.query(
         'INSERT INTO users (email, password) VALUES (@email, @password)',
         substitutionValues: {
           'email': email,
@@ -39,9 +49,10 @@ class AuthService {
     }
   }
 
-  Future<bool> authenticateUser(String email, String password) async {
+  // Function to
+  Future<bool> loginUser(String email, String password) async {
     try {
-      final results = await _connection.query(
+      final results = await _database.query(
         'SELECT * FROM users WHERE email = @email AND @password = @password',
         substitutionValues: {
           'email': email,
