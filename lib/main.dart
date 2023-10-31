@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petlink_flutter_app/app_pages/home_page_main.dart';
 import 'package:petlink_flutter_app/app_pages/login_page.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
             seedColor: const Color.fromRGBO(1, 98, 94, 1.0)),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      home: MyHomePage(fullName: "Alejandro"),
     );
   }
 }

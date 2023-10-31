@@ -2,18 +2,10 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:petlink_flutter_app/api/pet_service.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/search_view_filter.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
 import 'package:http/http.dart' as http;
-
-Future<List<Pet>> fetchPets() async {
-  final response = await http.get(
-      Uri.parse('http://192.168.95.203:8080/petlink/pets/inadoption'),
-      headers: {"Content-Type": "application/json"});
-
-  final List body = json.decode(response.body);
-  return body.map((e) => Pet.fromJson(e)).toList();
-}
 
 class PetsPage extends StatefulWidget {
   const PetsPage({super.key});
@@ -28,40 +20,57 @@ class _PetsPageState extends State<PetsPage> {
   @override
   void initState() {
     super.initState();
-    petsFuture = fetchPets();
+    petsFuture = PetService().getPetsInAdoption();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 228, 229, 228),
-        appBar: AppBar(
-          title: SearchViewFilterPets(petList: petsFuture),
-          iconTheme: IconThemeData(
-            color: Theme.of(context).primaryColorDark,
-          ),
-          elevation: 0,
+      backgroundColor: const Color.fromARGB(255, 4, 40, 71),
+      appBar: AppBar(
+        toolbarHeight: 80,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        title: SearchViewFilterPets(petList: petsFuture),
+        iconTheme: const IconThemeData(
+          color: Color.fromARGB(255, 4, 40, 71),
         ),
-        body: Center(
-          child: FutureBuilder<List<Pet>>(
-            future: petsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasData) {
-                final pets = snapshot.data!;
-                return buildPets(pets);
-              } else {
-                return const Text("No data available");
-              }
-            },
-          ),
-        ));
+        elevation: 0,
+      ),
+      body: Center(
+        child: FutureBuilder<List<Pet>>(
+          future: petsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Loading data...",
+                    style:
+                        TextStyle(fontFamily: 'BalooDa2', color: Colors.white),
+                  ),
+                ],
+              );
+            } else if (snapshot.hasData) {
+              final pets = snapshot.data!;
+              return buildPets(pets);
+            } else {
+              return const Text("No data available");
+            }
+          },
+        ),
+      ),
+    );
   }
 
   Widget buildPets(List<Pet> pets) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.only(top: 10, bottom: 15),
       child: ListView.builder(
         itemCount: pets.length,
         itemBuilder: (BuildContext context, int index) {

@@ -24,7 +24,7 @@ class _SearchViewFilterPetsState extends State<SearchViewFilterPets> {
           prefixIcon: IconButton(
             icon: Icon(
               Icons.search_rounded,
-              color: Theme.of(context).primaryColorDark,
+              color: Color.fromARGB(255, 4, 40, 71),
             ),
             onPressed: () => FocusScope.of(context).unfocus(),
           ),
@@ -36,7 +36,7 @@ class _SearchViewFilterPetsState extends State<SearchViewFilterPets> {
               color: Colors.white,
               icon: Icon(
                 Icons.filter_list_rounded,
-                color: Theme.of(context).primaryColorDark,
+                color: Color.fromARGB(255, 4, 40, 71),
               ),
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 const PopupMenuItem<String>(

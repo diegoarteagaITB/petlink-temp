@@ -5,14 +5,20 @@ import 'package:petlink_flutter_app/app_pages/pets_page_main.dart';
 import 'package:petlink_flutter_app/app_pages/user_home_page.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  const MyHomePage({super.key, required this.fullName});
+
+  final String fullName;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState(fullName);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int selectedPage = 0;
+  int selectedPage = 1;
+
+  final String fullName;
+
+  _MyHomePageState(this.fullName);
 
   void _navigateBottomBar(int index) {
     setState(() {
@@ -20,48 +26,43 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Color? _homePageBgColor(int index) {
-    switch (index) {
-      case 0:
-        return const Color.fromARGB(255, 228, 229, 228);
-      case 1:
-        return const Color.fromARGB(255, 228, 229, 228);
-      case 2:
-        return const Color.fromARGB(255, 228, 229, 228);
-    }
-    return null;
-  }
+  List<Widget> _pages = [];
 
-  final List<Widget> _pages = [
-    const UserHomePage(),
-    const PetsPage(),
-    const AccountPage(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+
+    _pages = [
+      const PetsPage(),
+      UserHomePage(fullName: fullName),
+      const AccountPage(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _homePageBgColor(selectedPage),
+      backgroundColor: const Color.fromARGB(255, 4, 40, 71),
       body: _pages[selectedPage],
       bottomNavigationBar: FluidNavBar(
         icons: [
           FluidNavBarIcon(
-              icon: Icons.home,
-              backgroundColor: Colors.grey,
-              extras: {"label": "home"}),
-          FluidNavBarIcon(
               icon: Icons.pets,
-              backgroundColor: Colors.grey,
+              backgroundColor: Colors.white,
               extras: {"label": "pets"}),
           FluidNavBarIcon(
+              icon: Icons.home,
+              backgroundColor: Colors.white,
+              extras: {"label": "home"}),
+          FluidNavBarIcon(
               icon: Icons.person,
-              backgroundColor: Colors.grey,
+              backgroundColor: Colors.white,
               extras: {"label": "account"}),
         ],
-        onChange: _navigateBottomBar,
+        onChange: (index) => _navigateBottomBar(index),
         style: const FluidNavBarStyle(
-            iconUnselectedForegroundColor: Colors.white,
-            iconSelectedForegroundColor: Colors.white),
+            iconUnselectedForegroundColor: Color.fromARGB(255, 4, 40, 71),
+            iconSelectedForegroundColor: Color.fromARGB(255, 4, 40, 71)),
         scaleFactor: 1.5,
         defaultIndex: 1,
         itemBuilder: (icon, item) => Semantics(

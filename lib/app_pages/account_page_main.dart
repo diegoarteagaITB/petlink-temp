@@ -11,7 +11,7 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Color.fromARGB(255, 228, 229, 228),
+      backgroundColor: Color.fromARGB(255, 4, 40, 71),
     );
   }
 }

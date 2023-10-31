@@ -97,6 +97,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  dni_nie_validator:
+    dependency: "direct main"
+    description:
+      name: dni_nie_validator
+      sha256: "00722a2ad72061f86e2c3e78870c4dd28fd9c8a0be81506ccafeeb8d015edbfa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   fake_async:
     dependency: transitive
     description:
@@ -163,6 +171,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  gradient_widgets:
+    dependency: "direct main"
+    description:
+      name: gradient_widgets
+      sha256: d337a8a329da9aefa50b82155d11875c1b9992982f65d15c805aa057a2670536
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.0"
   http:
     dependency: "direct main"
     description:
@@ -448,6 +464,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
+  text_marquee:
+    dependency: "direct main"
+    description:
+      name: text_marquee
+      sha256: "56dfa74b847a6acbf033fcfca88a0dcbc68134d4154f1bc9e68f8f75e196dc25"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
+  text_scroll:
+    dependency: "direct main"
+    description:
+      name: text_scroll
+      sha256: "7869d86a6fdd725dee56bdd150216a99f0372b82fbfcac319214dbd5f36e1908"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   typed_data:
     dependency: transitive
     description:

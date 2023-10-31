@@ -39,6 +39,10 @@ dependencies:
   cached_network_image: ^3.3.0
   http: ^1.1.0
   postgres: ^2.6.3
+  dni_nie_validator: ^0.0.2
+  text_marquee: ^0.0.2
+  text_scroll: ^0.2.0
+  gradient_widgets: ^0.6.0
 
 dev_dependencies:
   flutter_test:

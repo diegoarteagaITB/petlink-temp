@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:petlink_flutter_app/app_pages/home_page_main.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/custom_textfield.dart';
 import 'package:petlink_flutter_app/database/connection/connection.dart';
 import 'package:petlink_flutter_app/database/dao/users_dao.dart';
+import 'package:petlink_flutter_app/model/users_model.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -80,7 +82,18 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(10),
             child: TextButton(
               onPressed: () {
-                handleLogin(context, UserDao(myDatabase.connection));
+                final email = emailController.text;
+                final password = passwordController.text;
+                /*final user = User(
+                    firstName: "",
+                    lastName: "",
+                    dni: "",
+                    email: email,
+                    password: password,
+                    phone: "",
+                    profileImg: "placeholder.png");
+
+                handleLogin(context, UserDao(myDatabase.connection, user));*/
               },
               child: Container(
                 width: 200,
@@ -116,11 +129,12 @@ class _LoginPageState extends State<LoginPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RegisterPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterPage()),
                   );
                 },
                 child: const Text(
-                  "  Signup here!",
+                  "  Sign up here!",
                   style: TextStyle(
                     fontFamily: 'BalooDa2',
                     fontWeight: FontWeight.bold,
@@ -135,18 +149,41 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<bool?> handleLogin(BuildContext context, UserDao userDao) async {
-    final email = emailController.text;
-    final password = passwordController.text;
-
-    if (!userDao.isValidEmail(email)) {
-      return false;
-    } else if (!userDao.isValidPassword(password)) {
-      return false;
-    } else if (!userDao.isValidCredentials(email, password)) {
-      return false;
+  Future handleLogin(BuildContext context, UserDao userDao) async {
+    if (!userDao.isValidEmail()) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Escribe un email válido'),
+        ),
+      );
+    } else if (!userDao.isValidPassword()) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Escribe una contraseña válida'),
+        ),
+      );
+    } else if (!userDao.isValidCredentials()) {
+      return ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Rellena correctamente los campos'),
+        ),
+      );
+    } else if (await userDao.loginUser()) {
+      final fullName = await userDao.getUserFullName();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(
+            fullName: fullName.toString(),
+          ),
+        ),
+      );
     } else {
-      return true;
+      return ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Algo salió mal'),
+        ),
+      );
     }
   }
 }
