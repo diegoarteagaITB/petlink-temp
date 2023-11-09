@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petlink_flutter_app/api/authentication_service.dart';
 import 'package:petlink_flutter_app/app_pages/home_page_main.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/custom_textfield.dart';
 import 'package:petlink_flutter_app/database/connection/connection.dart';
@@ -15,6 +16,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final myDatabase = Database();
+  final userService = AuthService();
 
   @override
   void initState() {
@@ -81,9 +83,30 @@ class _LoginPageState extends State<LoginPage> {
           Padding(
             padding: const EdgeInsets.all(10),
             child: TextButton(
-              onPressed: () {
+              onPressed: () async {
                 final email = emailController.text;
                 final password = passwordController.text;
+
+                try {
+                  final connection =
+                      await userService.userLogin(email, password);
+
+                  if (connection == true) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyHomePage(
+                          fullName: email.toString(),
+                        ),
+                      ),
+                    );
+                  } else {
+                    debugPrint('Credenciales incorrectas');
+                  }
+                } catch (error) {
+                  debugPrint('Error: $error');
+                }
+
                 /*final user = User(
                     firstName: "",
                     lastName: "",
