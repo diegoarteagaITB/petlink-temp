@@ -3,13 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 
 import 'package:petlink_flutter_app/app_pages/widgets/card_flip_animation.dart';
+import 'package:petlink_flutter_app/app_pages/widgets/dialog_add_pet.dart';
 
 import 'package:text_scroll/text_scroll.dart';
 
 class UserHomePage extends StatefulWidget {
-  const UserHomePage({super.key, required this.fullName});
+  const UserHomePage({super.key, required this.fullName, required this.email});
 
   final String fullName;
+  final String email;
 
   @override
   State<UserHomePage> createState() => _UserHomePageState();
@@ -26,10 +28,12 @@ class _UserHomePageState extends State<UserHomePage> {
         appBar: AppBar(
             elevation: 0,
             backgroundColor: const Color.fromARGB(255, 3, 25, 44),
-            toolbarHeight: 62,
+            toolbarHeight: 82,
             leadingWidth: 110,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             leading: Padding(
-              padding: const EdgeInsets.only(left: 25),
+              padding: const EdgeInsets.only(left: 25, bottom: 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -56,123 +60,266 @@ class _UserHomePageState extends State<UserHomePage> {
                   onPressed: () => exitFullScreen(),
                   icon: const Icon(Icons.person))
             ]),
-        backgroundColor: const Color.fromARGB(255, 3, 25, 44),
+        backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.only(top: 15, bottom: 15),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  width: 350,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'PETS',
-                      style: TextStyle(
-                          fontFamily: 'BalooDa2',
-                          fontSize: 30,
-                          color: Colors.white),
-                    ),
-                  ),
+          child: Column(
+            children: [
+              const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Categories",
+                  style: TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 28, 28, 28)),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: SizedBox(
-                      width: 350, height: 510, child: CardFlipAnimation()),
+              ),
+              const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Select any category",
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 98, 98, 98)),
                 ),
-                Container(
-                  height: 50,
-                  width: 350,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 104, 0, 249),
-                        Color.fromARGB(255, 48, 11, 96)
-                      ],
-                    ),
-                  ),
-                  child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent),
-                      child: Row(
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Expanded(
+                child: GridView.count(
+                  primary: false,
+                  padding: const EdgeInsets.all(20),
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  crossAxisCount: 2,
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 209, 59, 255),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5, right: 15),
-                            child: Icon(Icons.pets),
+                          Icon(
+                            Icons.pets_rounded,
+                            size: 45,
+                            color: Colors.white,
                           ),
-                          const Text(
-                            'Add pet',
+                          Text(
+                            "My Pets",
                             style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
-                      )),
-                ),
-                const SizedBox(
-                  width: 350,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'VACUNAS',
-                      style: TextStyle(
-                          fontFamily: 'BalooDa2',
-                          fontSize: 30,
-                          color: Colors.white),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    width: 350,
-                    height: 160,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color.fromARGB(255, 20, 220, 163),
-                          Color.fromARGB(255, 67, 104, 214),
+                    GestureDetector(
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Color.fromARGB(255, 59, 101, 255),
+                        ),
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.catching_pokemon,
+                              size: 45,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "Add new pet",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AddPetWidget(
+                              email: widget.email,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 83, 167, 31),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.task,
+                            size: 45,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            "Adopt",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 350,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'HISTORIAL MÉDICO',
-                      style: TextStyle(
-                          fontFamily: 'BalooDa2',
-                          fontSize: 30,
-                          color: Colors.white),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Container(
-                    width: 350,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color.fromARGB(255, 20, 220, 163),
-                          Color.fromARGB(255, 67, 104, 214),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 255, 177, 59),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.vaccines_rounded,
+                            size: 45,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            "Vaccines",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 219, 30, 87),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.code,
+                            size: 45,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            "developing...",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 219, 30, 87),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.code,
+                            size: 45,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            "developing...",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 219, 30, 87),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.code,
+                            size: 45,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            "developing...",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(255, 219, 30, 87),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.code,
+                            size: 45,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            "developing...",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              )
+            ],
           ),
         ),
       ),

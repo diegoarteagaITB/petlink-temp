@@ -50,4 +50,36 @@ class PetService {
       throw Exception('Failed to load pets');
     }
   }
+
+  // Funcion que crea una mascota
+  Future<bool> postPet(Pet pet) async {
+    final url = Uri.parse('$ipAddressAPI/pets');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'id': pet.petId,
+          'userId': pet.userId,
+          'inAdoption': pet.inAdoption,
+          'name': pet.name,
+          'type': pet.type,
+          'gender': pet.gender,
+          'breed': pet.breed,
+          'castrated': pet.castrated,
+          'medHistId': pet.medHistId,
+          'imgId': pet.imgId,
+        }),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print('Error en la solicitud: $e');
+      return false;
+    }
+  }
 }

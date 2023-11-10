@@ -202,6 +202,7 @@ class SignupValidation {
             MaterialPageRoute(
               builder: (context) => MyHomePage(
                 fullName: user.name.toString(),
+                email: user.email,
               ),
             ),
           );

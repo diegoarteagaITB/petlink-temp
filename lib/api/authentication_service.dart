@@ -72,6 +72,33 @@ class AuthService {
     }
   }
 
+  // Funcion que me devuelve el nombre de usuario a traves del email
+  Future<String> getNameByEmail(String email) async {
+    final response = await http.get(
+      Uri.parse('$ipAddressAPI/users/name/$email'),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to load name of user');
+    }
+  }
+
+  Future<int> getUserIdByEmail(String email) async {
+    final response = await http.get(
+      Uri.parse('$ipAddressAPI/users/id/$email'),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    if (response.statusCode == 200) {
+      return int.parse(response.body);
+    } else {
+      throw Exception('Failed to load name of user');
+    }
+  }
+
   // Funcion para encriptar la contraseña
   String encryptPassword(String password) {
     final bytes = utf8.encode(password);

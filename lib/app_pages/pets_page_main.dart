@@ -22,12 +22,16 @@ class _PetsPageState extends State<PetsPage> {
     super.initState();
     petsFuture = PetService().getPetsInAdoption();
   }
+  // Color.fromARGB(255, 4, 40, 71)
+
+  double opacity = 1.0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 4, 40, 71),
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 4, 40, 71),
         toolbarHeight: 80,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         title: SearchViewFilterPets(petList: petsFuture),
@@ -36,42 +40,142 @@ class _PetsPageState extends State<PetsPage> {
         ),
         elevation: 0,
       ),
-      body: Center(
-        child: FutureBuilder<List<Pet>>(
-          future: petsFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: Colors.white,
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Ink(
+                      width: 85,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/dog_widget.png'),
+                            fit: BoxFit.fill),
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.blue.withOpacity(opacity),
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Loading data...",
-                    style:
-                        TextStyle(fontFamily: 'BalooDa2', color: Colors.white),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Ink(
+                      width: 85,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/cat_widget.png'),
+                            fit: BoxFit.fill),
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.blue.withOpacity(opacity),
+                      ),
+                    ),
                   ),
-                ],
-              );
-            } else if (snapshot.hasData) {
-              final pets = snapshot.data!;
-              return buildPets(pets);
-            } else {
-              return const Text("No data available");
-            }
-          },
-        ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Ink(
+                      width: 85,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/bird_widget.png'),
+                            fit: BoxFit.fill),
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.blue.withOpacity(opacity),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Ink(
+                      width: 85,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image:
+                                AssetImage('assets/images/felidae_widget.png'),
+                            fit: BoxFit.fill),
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.blue.withOpacity(opacity),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Ink(
+                      width: 85,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/fish_widget.png'),
+                            fit: BoxFit.fill),
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.blue.withOpacity(opacity),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: FutureBuilder<List<Pet>>(
+                future: petsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          color: Color.fromARGB(255, 4, 40, 71),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Loading data...",
+                          style: TextStyle(
+                              fontFamily: 'BalooDa2', color: Colors.white),
+                        ),
+                      ],
+                    );
+                  } else if (snapshot.hasData) {
+                    final pets = snapshot.data!;
+                    return buildPets(pets);
+                  } else {
+                    return const Text("No data available");
+                  }
+                },
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
 
   Widget buildPets(List<Pet> pets) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 15),
+      padding: const EdgeInsets.only(bottom: 15),
       child: ListView.builder(
+        shrinkWrap: true,
         itemCount: pets.length,
         itemBuilder: (BuildContext context, int index) {
           final pet = pets[index];
@@ -80,7 +184,7 @@ class _PetsPageState extends State<PetsPage> {
             padding: const EdgeInsets.all(10),
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xffF5F5F5),
+                color: Color.fromARGB(255, 4, 40, 71),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -116,7 +220,7 @@ class _PetsPageState extends State<PetsPage> {
                           style: const TextStyle(
                             fontFamily: 'BalooDa2',
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF7B7B7B),
+                            color: Colors.white,
                             fontSize: 19,
                           ),
                         ),
@@ -124,7 +228,7 @@ class _PetsPageState extends State<PetsPage> {
                           pet.breed,
                           style: const TextStyle(
                             fontFamily: 'BalooDa2',
-                            color: Color(0xFF7B7B7B),
+                            color: Colors.white,
                             fontSize: 15,
                           ),
                         ),
@@ -132,7 +236,7 @@ class _PetsPageState extends State<PetsPage> {
                           pet.castrated ? "Castrated" : "Not castrated",
                           style: const TextStyle(
                             fontFamily: 'BalooDa2',
-                            color: Color(0xFF7B7B7B),
+                            color: Colors.white,
                             fontSize: 15,
                           ),
                         )
@@ -149,7 +253,7 @@ class _PetsPageState extends State<PetsPage> {
                           onPressed: () => {},
                           style: ButtonStyle(
                             backgroundColor: MaterialStateColor.resolveWith(
-                              (states) => const Color(0xFFE4E5E4),
+                              (states) => Colors.white,
                             ),
                           ),
                           child: const Text(

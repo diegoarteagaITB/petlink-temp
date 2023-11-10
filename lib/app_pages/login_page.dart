@@ -92,12 +92,13 @@ class _LoginPageState extends State<LoginPage> {
                       await userService.userLogin(email, password);
 
                   if (connection == true) {
+                    debugPrint("hola");
+                    var userName = await userService.getNameByEmail(email);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MyHomePage(
-                          fullName: email.toString(),
-                        ),
+                        builder: (context) =>
+                            MyHomePage(fullName: userName, email: email),
                       ),
                     );
                   } else {
@@ -106,17 +107,6 @@ class _LoginPageState extends State<LoginPage> {
                 } catch (error) {
                   debugPrint('Error: $error');
                 }
-
-                /*final user = User(
-                    firstName: "",
-                    lastName: "",
-                    dni: "",
-                    email: email,
-                    password: password,
-                    phone: "",
-                    profileImg: "placeholder.png");
-
-                handleLogin(context, UserDao(myDatabase.connection, user));*/
               },
               child: Container(
                 width: 200,
@@ -170,43 +160,5 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
-  }
-
-  Future handleLogin(BuildContext context, UserDao userDao) async {
-    if (!userDao.isValidEmail()) {
-      return ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Escribe un email válido'),
-        ),
-      );
-    } else if (!userDao.isValidPassword()) {
-      return ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Escribe una contraseña válida'),
-        ),
-      );
-    } else if (!userDao.isValidCredentials()) {
-      return ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Rellena correctamente los campos'),
-        ),
-      );
-    } else if (await userDao.loginUser()) {
-      final fullName = await userDao.getUserFullName();
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyHomePage(
-            fullName: fullName.toString(),
-          ),
-        ),
-      );
-    } else {
-      return ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Algo salió mal'),
-        ),
-      );
-    }
   }
 }
