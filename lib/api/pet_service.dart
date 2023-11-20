@@ -51,6 +51,22 @@ class PetService {
     }
   }
 
+  // Función para buscar animales por su raza
+  Future<List<Pet>> getPetsByBreed(String breed) async {
+  final response = await http.get(
+    Uri.parse('$ipAddressAPI/pets/bybreed/${breed.toLowerCase()}'), // Reemplaza con la URL correcta
+    headers: {"Content-Type": "application/json"},
+  );
+
+  if (response.statusCode == 200) {
+    final List body = json.decode(response.body);
+    return body.map((e) => Pet.fromJson(e)).toList();
+  } else {
+    throw Exception('Failed to load pets');
+  }
+}
+
+
   // Funcion que crea una mascota
   Future<bool> postPet(Pet pet) async {
     final url = Uri.parse('$ipAddressAPI/pets');

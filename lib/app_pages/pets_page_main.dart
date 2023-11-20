@@ -34,7 +34,15 @@ class _PetsPageState extends State<PetsPage> {
         backgroundColor: Color.fromARGB(255, 4, 40, 71),
         toolbarHeight: 80,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        title: SearchViewFilterPets(petList: petsFuture),
+        title: SearchViewFilterPets(
+          onSearchTextChanged: (text) {
+            setState(() {
+              petsFuture = text.isNotEmpty
+                  ? PetService().getPetsByBreed(text)
+                  : PetService().getPetsInAdoption();
+            });
+          },
+        ),
         iconTheme: const IconThemeData(
           color: Color.fromARGB(255, 4, 40, 71),
         ),
@@ -158,6 +166,7 @@ class _PetsPageState extends State<PetsPage> {
                     );
                   } else if (snapshot.hasData) {
                     final pets = snapshot.data!;
+                    print("Number of peeeeets -->>>>>>>>>>>>>>: ${pets.length}");
                     return buildPets(pets);
                   } else {
                     return const Text("No data available");

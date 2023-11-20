@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 class SearchViewFilterPets extends StatefulWidget {
-  const SearchViewFilterPets({super.key, petList});
-
+  const SearchViewFilterPets({Key? key, petList, required this.onSearchTextChanged}): super(key: key);
+  
+  final void Function(String) onSearchTextChanged;
   @override
   State<SearchViewFilterPets> createState() => _SearchViewFilterPetsState();
+  
+  
 }
 
 class _SearchViewFilterPetsState extends State<SearchViewFilterPets> {
@@ -20,6 +23,12 @@ class _SearchViewFilterPetsState extends State<SearchViewFilterPets> {
       ),
       child: TextField(
         controller: _textController,
+        onChanged: (text){
+          Future.delayed(const Duration(milliseconds: 300), (){
+             widget.onSearchTextChanged(text);
+             print("Search text-------------->>: $text");
+          });
+        },
         decoration: InputDecoration(
           prefixIcon: IconButton(
             icon: Icon(
@@ -28,7 +37,7 @@ class _SearchViewFilterPetsState extends State<SearchViewFilterPets> {
             ),
             onPressed: () => FocusScope.of(context).unfocus(),
           ),
-          hintText: 'Search...',
+          hintText: 'Search by breed',
           border: InputBorder.none,
         ),
       ),
