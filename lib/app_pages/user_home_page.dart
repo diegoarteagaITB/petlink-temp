@@ -216,19 +216,19 @@ class _UserHomePageState extends State<UserHomePage> {
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Color.fromARGB(255, 219, 30, 87),
+                        color: Color.fromARGB(255, 219, 206, 30),
                       ),
                       child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.code,
+                            Icons.question_answer,
                             size: 45,
                             color: Colors.white,
                           ),
                           Text(
-                            "developing...",
+                            "Requests",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

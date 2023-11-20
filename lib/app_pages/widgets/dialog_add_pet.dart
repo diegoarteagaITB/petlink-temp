@@ -172,6 +172,7 @@ class _AddPetWidgetState extends State<AddPetWidget> {
               const SizedBox(
                 height: 15,
               ),
+              /*
               const Text(
                 "Pet image: ",
                 style: TextStyle(
@@ -258,7 +259,7 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                       border: Border.all(
                           color: const Color.fromARGB(255, 3, 25, 44))),
                 ),
-              ),
+              ),*/
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -301,9 +302,7 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                         breed: textControllers[3].text,
                         castrated: castratedValue,
                         medHistId: "",
-                        imgId: image != null
-                            ? FileImage(image!).file.path.toString()
-                            : "assets/images/images_preview.png",
+                        imgId: "assets/images/images_preview.png",
                       );
                       final connection = await PetService().postPet(pet);
                       debugPrint(connection.toString());

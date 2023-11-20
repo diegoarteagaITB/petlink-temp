@@ -184,7 +184,7 @@ class _PetsPageState extends State<PetsPage> {
             padding: const EdgeInsets.all(10),
             child: Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 4, 40, 71),
+                color: const Color.fromARGB(255, 4, 40, 71),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -192,7 +192,12 @@ class _PetsPageState extends State<PetsPage> {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          pet.imgId,
+                          width: 120,
+                        )
+                        /*
                       child: CachedNetworkImage(
                         placeholder: (context, url) => Center(
                           child: SizedBox(
@@ -207,8 +212,8 @@ class _PetsPageState extends State<PetsPage> {
                         ),
                         imageUrl: pet.imgId,
                         width: 120,
-                      ),
-                    ),
+                      ),*/
+                        ),
                   ),
                   Expanded(
                     child: Column(
