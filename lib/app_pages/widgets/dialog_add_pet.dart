@@ -1,12 +1,16 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:petlink_flutter_app/api/authentication_service.dart';
 import 'package:petlink_flutter_app/api/pet_service.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/custom_textfield.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
 
 import 'package:flutter/material.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 class AddPetWidget extends StatefulWidget {
   final String email;
@@ -36,6 +40,22 @@ class _AddPetWidgetState extends State<AddPetWidget> {
   _AddPetWidgetState() {
     castratedValue = false;
     adoptionValue = false;
+  }
+
+  File? image;
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+      final imageTemp = File(image.path);
+      setState(() {
+        this.image = imageTemp;
+        debugPrint(imageTemp.toString());
+        debugPrint(image.toString());
+      });
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
   }
 
   @override
@@ -92,7 +112,7 @@ class _AddPetWidgetState extends State<AddPetWidget> {
         ),
       ),
       content: Container(
-        height: 500,
+        height: 510,
         width: 330,
         child: SingleChildScrollView(
           child: Column(
@@ -152,6 +172,94 @@ class _AddPetWidgetState extends State<AddPetWidget> {
               const SizedBox(
                 height: 15,
               ),
+              /*
+              const Text(
+                "Pet image: ",
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'BalooDa2',
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        pickImage(ImageSource.gallery);
+                      },
+                      child: Container(
+                        width: 110,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Color.fromARGB(255, 3, 25, 44),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 11, horizontal: 10),
+                        child: const TextScroll(
+                          'Pick Image from Galery          ',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                            fontFamily: 'BalooDa2',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          mode: TextScrollMode.endless,
+                          pauseBetween: Duration(milliseconds: 500),
+                          velocity: Velocity(pixelsPerSecond: Offset(20, 0)),
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        pickImage(ImageSource.camera);
+                      },
+                      child: Container(
+                        width: 110,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Color.fromARGB(255, 3, 25, 44),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 11, horizontal: 10),
+                        child: const TextScroll(
+                          'Pick Image from Camera          ',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                            fontFamily: 'BalooDa2',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          mode: TextScrollMode.endless,
+                          pauseBetween: Duration(milliseconds: 500),
+                          velocity: Velocity(pixelsPerSecond: Offset(20, 0)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                child: Container(
+                  width: 110,
+                  height: 140,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: image != null
+                            ? FileImage(image!)
+                            : const AssetImage(
+                                    "assets/images/images_preview.png")
+                                as ImageProvider<Object>,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color: const Color.fromARGB(255, 3, 25, 44))),
+                ),
+              ),*/
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,8 +302,7 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                         breed: textControllers[3].text,
                         castrated: castratedValue,
                         medHistId: "",
-                        imgId:
-                            "https://images.fineartamerica.com/images-medium-large/dog-black-and-white-portrait-sumit-mehndiratta.jpg",
+                        imgId: "assets/images/images_preview.png",
                       );
                       final connection = await PetService().postPet(pet);
                       debugPrint(connection.toString());

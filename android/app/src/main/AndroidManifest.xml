@@ -3,11 +3,13 @@
 <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+
         android:label="petlink_flutter_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
+            android:requestLegacyExternalStorage="true"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

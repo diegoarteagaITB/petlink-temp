@@ -44,6 +44,7 @@ dependencies:
   text_scroll: ^0.2.0
   gradient_widgets: ^0.6.0
   crypto: ^3.0.1
+  image_picker: ^0.8.3
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,7 @@ flutter:
     - assets/images/bird_widget.png
     - assets/images/felidae_widget.png
     - assets/images/fish_widget.png
+    - assets/images/images_preview.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
