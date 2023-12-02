@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
-
+import 'package:petlink_flutter_app/app_pages/mypets_page.dart';
+import 'package:petlink_flutter_app/app_pages/requests_page.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/card_flip_animation.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/dialog_add_pet.dart';
 
 import 'package:text_scroll/text_scroll.dart';
 
 class UserHomePage extends StatefulWidget {
-  const UserHomePage({super.key, required this.fullName, required this.email});
+  const UserHomePage({super.key, required this.fullName, required this.email, required this.userId});
 
   final String fullName;
   final String email;
+  final int userId;
 
   @override
   State<UserHomePage> createState() => _UserHomePageState();
@@ -98,7 +100,8 @@ class _UserHomePageState extends State<UserHomePage> {
                   mainAxisSpacing: 20,
                   crossAxisCount: 2,
                   children: <Widget>[
-                    Container(
+                    GestureDetector(
+                      child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -124,6 +127,12 @@ class _UserHomePageState extends State<UserHomePage> {
                         ],
                       ),
                     ),
+                    onTap:() {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MyPetsPage(userId: widget.userId)),
+                      );
+                    }
+                    ),
+                    
                     GestureDetector(
                       child: Container(
                         padding: const EdgeInsets.all(12),
@@ -214,7 +223,8 @@ class _UserHomePageState extends State<UserHomePage> {
                         ],
                       ),
                     ),
-                    Container(
+                    GestureDetector(
+                      child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -238,7 +248,12 @@ class _UserHomePageState extends State<UserHomePage> {
                             ),
                           ),
                         ],
-                      ),
+                      ), 
+                    ),
+                    onTap:() {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RequestsPage(userId: widget.userId)),
+                      );
+                    }
                     ),
                     Container(
                       padding: const EdgeInsets.all(12),

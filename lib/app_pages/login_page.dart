@@ -88,25 +88,21 @@ class _LoginPageState extends State<LoginPage> {
                   final email = emailController.text;
                   final password = passwordController.text;
 
-                  try {
-                    final connection =
-                        await userService.userLogin(email, password);
+                  final connection =
+                      await userService.userLogin(email, password);
 
-                    if (connection == true) {
-                      debugPrint("hola");
-                      var userName = await userService.getNameByEmail(email);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              MyHomePage(fullName: userName, email: email),
-                        ),
-                      );
-                    } else {
-                      debugPrint('Credenciales incorrectas');
-                    }
-                  } catch (error) {
-                    debugPrint('Error: $error');
+                  if (connection != null) {
+                    var userName = await userService.getNameByEmail(email);
+                    var userId = await userService.getUserIdByEmail(email);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyHomePage(
+                            fullName: userName, email: email, userId: userId),
+                      ),
+                    );
+                  } else {
+                    debugPrint('Credenciales incorrectas');
                   }
                 },
                 child: Container(

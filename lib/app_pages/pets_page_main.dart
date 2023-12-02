@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'dart:typed_data';
 
 import 'package:cached_memory_image/cached_memory_image.dart';
@@ -10,7 +12,9 @@ import 'package:petlink_flutter_app/model/pets_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PetsPage extends StatefulWidget {
-  const PetsPage({super.key});
+  final int userId;
+  final String fullName;
+  const PetsPage({super.key, required this.userId, required this.fullName});
 
   @override
   State<PetsPage> createState() => _PetsPageState();
@@ -18,6 +22,7 @@ class PetsPage extends StatefulWidget {
 
 class _PetsPageState extends State<PetsPage> {
   late Future<List<Pet>> petsFuture;
+  bool buttonPressed = false;
 
   @override
   void initState() {
@@ -255,11 +260,28 @@ class _PetsPageState extends State<PetsPage> {
                           width: 70,
                           height: 30,
                           child: TextButton(
-                            onPressed: () => {},
+                            onPressed: () async {
+                              final success = await PetService()
+                                  .sendAdoptionRequest(widget.userId, pet.petId,
+                                      widget.fullName);
+                              if (success) {
+                                print('Adoption request sent');
+                                setState(() {
+                                  buttonPressed = true;
+                                });
+                              } else {
+                                print('Failed to send request');
+                              }
+                            },
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateColor.resolveWith(
-                                (states) => Colors.white,
-                              ),
+                              backgroundColor:
+                                  MaterialStateColor.resolveWith((states) {
+                                if (buttonPressed) {
+                                  return Colors.transparent;
+                                } else {
+                                  return Colors.white;
+                                }
+                              }),
                             ),
                             child: const Text(
                               "Adopt",

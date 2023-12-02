@@ -1,17 +1,16 @@
+import 'dart:core';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:petlink_flutter_app/api/ktor/authentication_service.dart';
 import 'package:petlink_flutter_app/api/ktor/pet_service.dart';
-import 'package:petlink_flutter_app/api/supabase/supabase_service.dart';
+
 import 'package:petlink_flutter_app/app_pages/widgets/custom_textfield.dart';
-import 'package:petlink_flutter_app/main.dart';
+
 import 'package:petlink_flutter_app/model/pets_model.dart';
 
-import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:text_scroll/text_scroll.dart';
 
@@ -133,8 +132,8 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                   keyboardType: TextInputType.text,
                   padding: EdgeInsets.only(top: 10, bottom: 10),
                 ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 12),
+              const Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 12),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

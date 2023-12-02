@@ -104,7 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         profileImg: "placeholder.png",
                       );
                     });
-                    SignupValidation.validateSignup(
+                    await SignupValidation.validateSignup(
                         userService: userService,
                         user: user!,
                         context: context);
@@ -197,12 +197,14 @@ class SignupValidation {
       try {
         final connection = await userService.userRegister(user);
         if (connection == true) {
+          final userId = await userService.getUserIdByEmail(user.email);
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => MyHomePage(
                 fullName: user.name.toString(),
                 email: user.email,
+                userId: userId,
               ),
             ),
           );

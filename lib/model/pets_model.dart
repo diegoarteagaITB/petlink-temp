@@ -40,15 +40,16 @@ class Pet {
 
   factory Pet.fromMap(Map<String, dynamic> map) {
     return Pet(
-        petId: map['pet_id'],
-        userId: map['pet_user_id'],
-        inAdoption: map['pet_in_adoption'],
-        name: map['pet_name'],
-        type: map['pet_type'],
-        gender: map['pet_gender'],
-        breed: map['pet_gender'],
-        castrated: map['pet_castrated'],
-        medHistId: map['pet_med_hist_id'],
-        imgId: map['pet_img_id']);
+      petId: map['pet_id'],
+      userId: map['pet_user_id'],
+      inAdoption: map['pet_in_adoption'],
+      name: map['pet_name'],
+      type: map['pet_type'],
+      gender: map['pet_gender'],
+      breed: map['pet_breed'],
+      castrated: map['pet_castrated'],
+      medHistId: map['pet_med_hist_id'],
+      imgId: map['pet_img_id'],
+    );
   }
 }
