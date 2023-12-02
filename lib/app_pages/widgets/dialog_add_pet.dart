@@ -172,94 +172,7 @@ class _AddPetWidgetState extends State<AddPetWidget> {
               const SizedBox(
                 height: 15,
               ),
-              /*
-              const Text(
-                "Pet image: ",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'BalooDa2',
-                ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        pickImage(ImageSource.gallery);
-                      },
-                      child: Container(
-                        width: 110,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Color.fromARGB(255, 3, 25, 44),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 11, horizontal: 10),
-                        child: const TextScroll(
-                          'Pick Image from Galery          ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.0,
-                            fontFamily: 'BalooDa2',
-                            fontWeight: FontWeight.bold,
-                          ),
-                          mode: TextScrollMode.endless,
-                          pauseBetween: Duration(milliseconds: 500),
-                          velocity: Velocity(pixelsPerSecond: Offset(20, 0)),
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        pickImage(ImageSource.camera);
-                      },
-                      child: Container(
-                        width: 110,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Color.fromARGB(255, 3, 25, 44),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 11, horizontal: 10),
-                        child: const TextScroll(
-                          'Pick Image from Camera          ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.0,
-                            fontFamily: 'BalooDa2',
-                            fontWeight: FontWeight.bold,
-                          ),
-                          mode: TextScrollMode.endless,
-                          pauseBetween: Duration(milliseconds: 500),
-                          velocity: Velocity(pixelsPerSecond: Offset(20, 0)),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 10),
-                child: Container(
-                  width: 110,
-                  height: 140,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: image != null
-                            ? FileImage(image!)
-                            : const AssetImage(
-                                    "assets/images/images_preview.png")
-                                as ImageProvider<Object>,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: const Color.fromARGB(255, 3, 25, 44))),
-                ),
-              ),*/
+              
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -303,6 +216,7 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                         castrated: castratedValue,
                         medHistId: "",
                         imgId: "assets/images/images_preview.png",
+                        adoptionRequests: []
                       );
                       final connection = await PetService().postPet(pet);
                       debugPrint(connection.toString());

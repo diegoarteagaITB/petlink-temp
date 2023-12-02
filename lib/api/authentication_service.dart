@@ -97,6 +97,7 @@ class AuthService {
     } else {
       throw Exception('Failed to load name of user');
     }
+    
   }
 
   // Funcion para encriptar la contraseña

@@ -1,14 +1,16 @@
 import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:petlink_flutter_app/api/pet_service.dart';
+import 'package:petlink_flutter_app/app_pages/requests_page.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/search_view_filter.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
 import 'package:http/http.dart' as http;
 
 class PetsPage extends StatefulWidget {
-  const PetsPage({super.key});
+  final int userId;
+  final String fullName;
+  const PetsPage({super.key, required this.userId, required this.fullName});
 
   @override
   State<PetsPage> createState() => _PetsPageState();
@@ -16,15 +18,18 @@ class PetsPage extends StatefulWidget {
 
 class _PetsPageState extends State<PetsPage> {
   late Future<List<Pet>> petsFuture;
+  bool buttonPressed = false;
 
   @override
   void initState() {
     super.initState();
     petsFuture = PetService().getPetsInAdoption();
+    
   }
   // Color.fromARGB(255, 4, 40, 71)
 
   double opacity = 1.0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -202,26 +207,7 @@ class _PetsPageState extends State<PetsPage> {
                     padding: const EdgeInsets.all(10),
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          pet.imgId,
-                          width: 120,
-                        )
-                        /*
-                      child: CachedNetworkImage(
-                        placeholder: (context, url) => Center(
-                          child: SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(
-                                Theme.of(context).primaryColorDark,
-                              ),
-                            ),
-                          ),
-                        ),
-                        imageUrl: pet.imgId,
-                        width: 120,
-                      ),*/
+                        child:  Image.network('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTaz8nxlHqYqwb3ILtns16xBpevGzrtHnje3SorSF0gw&s'),
                         ),
                   ),
                   Expanded(
@@ -264,10 +250,27 @@ class _PetsPageState extends State<PetsPage> {
                         width: 70,
                         height: 30,
                         child: TextButton(
-                          onPressed: () => {},
+                          onPressed: () async {
+                            final success = await PetService().sendAdoptionRequest(widget.userId, pet.petId, widget.fullName);
+                            if (success){
+                              print('Adoption request sent');
+                              setState(() {
+                                buttonPressed = true;
+                              });
+                          
+                            } else{
+                              print('Failed to send request');
+                            }
+                          },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateColor.resolveWith(
-                              (states) => Colors.white,
+                              (states) {
+                                if (buttonPressed){
+                                  return Colors.transparent;
+                                }else{
+                                  return Colors.white;
+                                }
+                              } 
                             ),
                           ),
                           child: const Text(

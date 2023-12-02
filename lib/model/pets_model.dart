@@ -9,6 +9,7 @@ class Pet {
   bool castrated;
   String medHistId;
   String imgId;
+  List<String> adoptionRequests;
 
   Pet({
     required this.petId,
@@ -21,6 +22,7 @@ class Pet {
     required this.castrated,
     required this.medHistId,
     required this.imgId,
+    required this.adoptionRequests
   });
 
   factory Pet.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,9 @@ class Pet {
       castrated: json['castrated'],
       medHistId: json['medHistId'],
       imgId: json['imgId'],
+      adoptionRequests: json['adoptionsrequests'] != null
+          ? List <String>.from(json['adoptionrequests'])
+          : [],
     );
   }
 
@@ -46,9 +51,13 @@ class Pet {
         name: map['pet_name'],
         type: map['pet_type'],
         gender: map['pet_gender'],
-        breed: map['pet_gender'],
+        breed: map['pet_breed'],
         castrated: map['pet_castrated'],
         medHistId: map['pet_med_hist_id'],
-        imgId: map['pet_img_id']);
+        imgId: map['pet_img_id'],
+        adoptionRequests: map['adoptionsrequests'] != null
+          ? List <String>.from(map['adoptionrequests'])
+          : [],
+      );
   }
 }

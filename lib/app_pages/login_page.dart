@@ -86,19 +86,18 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () async {
                 final email = emailController.text;
                 final password = passwordController.text;
-
                 try {
                   final connection =
                       await userService.userLogin(email, password);
 
-                  if (connection == true) {
-                    debugPrint("hola");
+                  if (connection != null) {
                     var userName = await userService.getNameByEmail(email);
+                    var userId = await userService.getUserIdByEmail(email);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            MyHomePage(fullName: userName, email: email),
+                            MyHomePage(fullName: userName, email: email, userId: userId),
                       ),
                     );
                   } else {
