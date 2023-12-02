@@ -4,12 +4,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:petlink_flutter_app/api/authentication_service.dart';
-import 'package:petlink_flutter_app/api/pet_service.dart';
+import 'package:petlink_flutter_app/api/ktor/authentication_service.dart';
+import 'package:petlink_flutter_app/api/ktor/pet_service.dart';
+import 'package:petlink_flutter_app/api/supabase/supabase_service.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/custom_textfield.dart';
+import 'package:petlink_flutter_app/main.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
 
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:text_scroll/text_scroll.dart';
 
 class AddPetWidget extends StatefulWidget {
@@ -25,14 +28,13 @@ class _AddPetWidgetState extends State<AddPetWidget> {
   late bool castratedValue;
   late bool adoptionValue;
   final List<TextEditingController> textControllers = List.generate(
-    5,
+    4,
     (index) => TextEditingController(),
   );
 
   final List<String> fieldTextType = [
     "Name",
     "Pet Type",
-    "Gender",
     "Breed",
     "Castrated",
   ];
@@ -42,8 +44,10 @@ class _AddPetWidgetState extends State<AddPetWidget> {
     adoptionValue = false;
   }
 
+  final supabase = Supabase.instance.client;
+
   File? image;
-  Future pickImage(ImageSource source) async {
+  Future pickAndUploadImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
@@ -121,7 +125,7 @@ class _AddPetWidgetState extends State<AddPetWidget> {
               const SizedBox(
                 height: 20,
               ),
-              for (var i = 0; i < 4; i++)
+              for (var i = 0; i < 3; i++)
                 customTextFormField(
                   context: context,
                   controller: textControllers[i],
@@ -129,6 +133,16 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                   keyboardType: TextInputType.text,
                   padding: EdgeInsets.only(top: 10, bottom: 10),
                 ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    InputChip(label: Text("Male")),
+                    InputChip(label: Text("Female"))
+                  ],
+                ),
+              ),
               Row(
                 children: [
                   const Text(
@@ -172,7 +186,6 @@ class _AddPetWidgetState extends State<AddPetWidget> {
               const SizedBox(
                 height: 15,
               ),
-              /*
               const Text(
                 "Pet image: ",
                 style: TextStyle(
@@ -186,8 +199,8 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                 child: Row(
                   children: [
                     TextButton(
-                      onPressed: () {
-                        pickImage(ImageSource.gallery);
+                      onPressed: () async {
+                        pickAndUploadImage(ImageSource.gallery);
                       },
                       child: Container(
                         width: 110,
@@ -213,8 +226,8 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
-                        pickImage(ImageSource.camera);
+                      onPressed: () async {
+                        pickAndUploadImage(ImageSource.camera);
                       },
                       child: Container(
                         width: 110,
@@ -249,6 +262,7 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                   height: 140,
                   decoration: BoxDecoration(
                       image: DecorationImage(
+                        fit: BoxFit.cover,
                         image: image != null
                             ? FileImage(image!)
                             : const AssetImage(
@@ -259,7 +273,15 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                       border: Border.all(
                           color: const Color.fromARGB(255, 3, 25, 44))),
                 ),
-              ),*/
+              ),
+              const Text(
+                "Recommended size: 1280p x 720p",
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'BalooDa2',
+                ),
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -291,6 +313,8 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                   ),
                   TextButton(
                     onPressed: () async {
+                      final dateOnPressed = DateTime.now();
+
                       late Pet? pet;
                       pet = Pet(
                         petId: 0,
@@ -302,11 +326,16 @@ class _AddPetWidgetState extends State<AddPetWidget> {
                         breed: textControllers[3].text,
                         castrated: castratedValue,
                         medHistId: "",
-                        imgId: "assets/images/images_preview.png",
+                        imgId:
+                            "${await userAuth.getUserIdByEmail(widget.email)}_$dateOnPressed",
                       );
                       final connection = await PetService().postPet(pet);
-                      debugPrint(connection.toString());
+
                       if (connection == true) {
+                        await supabase.storage.from('images').upload(
+                            'pet_images/${pet.userId.toString()}_$dateOnPressed',
+                            image!);
+
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

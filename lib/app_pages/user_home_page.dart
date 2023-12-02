@@ -18,6 +18,8 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomePageState extends State<UserHomePage> {
+  final List<String> genderListItem = ["Male", "Female"];
+
   @override
   Widget build(BuildContext context) {
     enterFullScreen();

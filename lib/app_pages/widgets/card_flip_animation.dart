@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
-import 'package:petlink_flutter_app/api/pet_service.dart';
+import 'package:petlink_flutter_app/api/ktor/pet_service.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
 import 'dart:math' as math;
 
