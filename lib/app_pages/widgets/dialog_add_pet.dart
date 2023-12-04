@@ -48,7 +48,11 @@ class _AddPetWidgetState extends State<AddPetWidget> {
   File? image;
   Future pickAndUploadImage(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: source);
+      final image = await ImagePicker().pickImage(
+        source: source,
+        imageQuality: 25,
+      );
+
       if (image == null) return;
       final imageTemp = File(image.path);
       setState(() {

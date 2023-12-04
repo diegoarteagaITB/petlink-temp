@@ -4,6 +4,7 @@ import 'package:petlink_flutter_app/app_pages/home_page_main.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/custom_textfield.dart';
 import 'package:petlink_flutter_app/database/connection/connection.dart';
 import 'package:petlink_flutter_app/database/dao/users_dao.dart';
+import 'package:petlink_flutter_app/global_variables.dart';
 import 'package:petlink_flutter_app/model/users_model.dart';
 import 'package:postgres/postgres.dart';
 import 'login_page.dart';
@@ -92,9 +93,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.all(10),
                 child: TextButton(
                   onPressed: () async {
-                    late User? user;
+                    late Users? user;
                     setState(() {
-                      user = User(
+                      user = Users(
                         id: 1,
                         name: textControllers[0].text,
                         dni: textControllers[1].text,
@@ -172,7 +173,7 @@ class SignupValidation {
   static Future<ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?>
       validateSignup(
           {required AuthService userService,
-          required User user,
+          required Users user,
           required BuildContext context}) async {
     if (!RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
         .hasMatch(user.email)) {
@@ -208,6 +209,9 @@ class SignupValidation {
               ),
             ),
           );
+          loggedUserEmail = user.email;
+          loggedUserName = user.name.toString();
+          loggedUserId = userId;
         } else {
           debugPrint('Credenciales incorrectas');
         }

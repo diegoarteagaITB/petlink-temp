@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:petlink_flutter_app/api/ktor/authentication_service.dart';
 import 'package:petlink_flutter_app/api/ktor/pet_service.dart';
-
+import 'package:petlink_flutter_app/app_pages/pet_detail_page.dart';
+import 'package:petlink_flutter_app/global_variables.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/search_view_filter.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:petlink_flutter_app/model/users_model.dart';
 
 class MyPetsPage extends StatefulWidget {
   final int userId;
@@ -73,16 +76,20 @@ class _MyPetsPageState extends State<MyPetsPage> {
                   Text(pet.castrated ? 'Castrated' : 'Not castrated'),
                 ],
               ),
-              trailing: pet.inAdoption
-                  ? ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
-                        onPrimary: Colors.black,
-                      ),
-                      child: Text('Adopt'),
-                    )
-                  : SizedBox.shrink(),
+              onTap: () async {
+                Users fullUser =
+                    await AuthService().getUserByUserId(pet.userId);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PetDetailPage(
+                        pet: pet,
+                        userId: widget.userId,
+                        fullName: loggedUserName,
+                        fullUser: fullUser),
+                  ),
+                );
+              },
             ),
           ),
         );

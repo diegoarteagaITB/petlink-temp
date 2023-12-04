@@ -1,9 +1,10 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:petlink_flutter_app/main.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+
+import 'package:petlink_flutter_app/global_variables.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseService {
@@ -20,8 +21,6 @@ class SupabaseService {
     final object =
         await supabase.storage.from('images').download('pet_images/$imgId');
 
-    debugPrint(object.toString());
-    debugPrint(imgId.toString());
     return object;
   }
 }

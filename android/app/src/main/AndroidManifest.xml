@@ -4,7 +4,7 @@
 
     <application
 
-        android:label="petlink_flutter_app"
+        android:label="PetLink"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

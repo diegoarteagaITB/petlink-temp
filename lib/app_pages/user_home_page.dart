@@ -3,13 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:petlink_flutter_app/app_pages/mypets_page.dart';
 import 'package:petlink_flutter_app/app_pages/requests_page.dart';
-import 'package:petlink_flutter_app/app_pages/widgets/card_flip_animation.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/dialog_add_pet.dart';
 
 import 'package:text_scroll/text_scroll.dart';
 
 class UserHomePage extends StatefulWidget {
-  const UserHomePage({super.key, required this.fullName, required this.email, required this.userId});
+  const UserHomePage(
+      {super.key,
+      required this.fullName,
+      required this.email,
+      required this.userId});
 
   final String fullName;
   final String email;
@@ -101,38 +104,40 @@ class _UserHomePageState extends State<UserHomePage> {
                   crossAxisCount: 2,
                   children: <Widget>[
                     GestureDetector(
-                      child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color.fromARGB(255, 209, 59, 255),
-                      ),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.pets_rounded,
-                            size: 45,
-                            color: Colors.white,
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color.fromARGB(255, 209, 59, 255),
                           ),
-                          Text(
-                            "My Pets",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.pets_rounded,
+                                size: 45,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                "My Pets",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    onTap:() {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MyPetsPage(userId: widget.userId)),
-                      );
-                    }
-                    ),
-                    
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    MyPetsPage(userId: widget.userId)),
+                          );
+                        }),
                     GestureDetector(
                       child: Container(
                         padding: const EdgeInsets.all(12),
@@ -224,37 +229,40 @@ class _UserHomePageState extends State<UserHomePage> {
                       ),
                     ),
                     GestureDetector(
-                      child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color.fromARGB(255, 219, 206, 30),
-                      ),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.question_answer,
-                            size: 45,
-                            color: Colors.white,
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color.fromARGB(255, 219, 206, 30),
                           ),
-                          Text(
-                            "Requests",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.question_answer,
+                                size: 45,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                "Requests",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ), 
-                    ),
-                    onTap:() {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RequestsPage(userId: widget.userId)),
-                      );
-                    }
-                    ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    RequestsPage(userId: widget.userId)),
+                          );
+                        }),
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
