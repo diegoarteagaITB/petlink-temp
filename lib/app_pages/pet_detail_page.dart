@@ -1,13 +1,25 @@
 import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
+import 'package:petlink_flutter_app/api/ktor/petRequest_service.dart';
+
 import 'package:petlink_flutter_app/api/supabase/supabase_service.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
+import 'package:petlink_flutter_app/model/users_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PetDetailPage extends StatefulWidget {
-  const PetDetailPage({super.key, required this.pet});
+  const PetDetailPage(
+      {super.key,
+      required this.pet,
+      required this.fullName,
+      required this.userId,
+      required this.fullUser});
 
+  final int userId;
+  final String fullName;
+  final Users fullUser;
   final Pet pet;
 
   @override
@@ -19,6 +31,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
   List<String> listOfPetFeaturesValue = ["9999", "9999", "9999"];
 
   final supaService = SupabaseService();
+  bool buttonPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +97,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
                                 Container(
@@ -107,7 +120,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
                                   ),
                                   child: Text(
                                     listOfPetFeaturesValue[i],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Color.fromARGB(255, 4, 40, 71),
                                       fontFamily: 'BalooDa2',
                                       fontWeight: FontWeight.bold,
@@ -119,7 +132,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
                         ],
                       ),
                       Divider(
-                        color: Color.fromARGB(255, 4, 40, 71),
+                        color: const Color.fromARGB(255, 4, 40, 71),
                         height: 36,
                         indent: MediaQuery.of(context).size.width * 0.1,
                         endIndent: MediaQuery.of(context).size.width * 0.1,
@@ -128,32 +141,33 @@ class _PetDetailPageState extends State<PetDetailPage> {
                         padding: EdgeInsets.only(
                           left: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        child: const Row(
+                        child: Row(
                           children: [
-                            CircleAvatar(
+                            const CircleAvatar(
                               radius: 32,
                               backgroundImage: NetworkImage(
                                   "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 10),
+                              padding: const EdgeInsets.only(left: 10),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text("Jhon Doe",
-                                      style: TextStyle(
+                                  Text(widget.fullUser.name,
+                                      style: const TextStyle(
                                           fontFamily: 'BalooDa2',
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold)),
-                                  Text(
+                                  const Text(
                                     "Owner",
                                     style: TextStyle(fontFamily: 'BalooDa2'),
                                   ),
                                   Text(
-                                    "28/04/2003",
-                                    style: TextStyle(fontFamily: 'BalooDa2'),
+                                    widget.fullUser.email,
+                                    style:
+                                        const TextStyle(fontFamily: 'BalooDa2'),
                                   )
                                 ],
                               ),
@@ -178,8 +192,18 @@ class _PetDetailPageState extends State<PetDetailPage> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
+                          onPressed: () async {
+                            final success = await PetRequest()
+                                .sendAdoptionRequest(widget.userId,
+                                    widget.pet.petId, widget.fullName);
+                            if (success) {
+                              debugPrint('Adoption request sent');
+                              setState(() {
+                                buttonPressed = true;
+                              });
+                            } else {
+                              debugPrint('Failed to send request');
+                            }
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width * 0.8,
@@ -225,7 +249,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
               ],
             ),
             child: Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 8),
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,14 +263,14 @@ class _PetDetailPageState extends State<PetDetailPage> {
                   ),
                   Text(
                     widget.pet.breed,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'BalooDa2',
                       fontSize: 15,
                     ),
                   ),
                   Text(
                     widget.pet.castrated ? "Castrated" : "Not castrated",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'BalooDa2',
                       fontSize: 15,
                     ),
@@ -254,6 +278,32 @@ class _PetDetailPageState extends State<PetDetailPage> {
                 ],
               ),
             ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10, left: 10),
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: const Color.fromARGB(119, 0, 0, 0),
+                    child: IconButton(
+                      color: Colors.black,
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
         ],
       ),

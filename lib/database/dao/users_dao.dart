@@ -6,7 +6,7 @@ import 'package:dni_nie_validator/dni_nie_validator.dart';
 class UserDao {
   // Database declaration
   final PostgreSQLConnection _database;
-  final User _user;
+  final Users _user;
 
   UserDao(this._database, this._user);
 

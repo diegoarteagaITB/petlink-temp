@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:petlink_flutter_app/global_variables.dart';
 import 'package:petlink_flutter_app/main.dart';
 import 'package:petlink_flutter_app/model/users_model.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +36,7 @@ class AuthService {
   }
 
   // Funcion que devuelve un booleano si el usuario se ha registrado correctamente
-  Future<bool> userRegister(User user) async {
+  Future<bool> userRegister(Users user) async {
     final url = Uri.parse('$ipAddress/users');
 
     debugPrint("Password decrypt: ${user.password}");
@@ -94,6 +95,26 @@ class AuthService {
       return int.parse(response.body);
     } else {
       throw Exception('Failed to load name of user');
+    }
+  }
+
+  // Funcion que devuelve un usuario entero a traves de un id de usuario
+  Future<Users> getUserByUserId(int id) async {
+    final response = await http.get(
+      Uri.parse('$ipAddress/users/fullUser/$id'),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    debugPrint("aaaaaaaaaaaaaaaaaaaaaaaa " + response.body);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> userMap = json.decode(response.body);
+
+      Users user = Users.fromJson(userMap);
+
+      return user;
+    } else {
+      throw Exception('Failed to load user');
     }
   }
 

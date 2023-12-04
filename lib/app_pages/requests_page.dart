@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:petlink_flutter_app/api/ktor/petRequest_service.dart';
 import 'package:petlink_flutter_app/api/ktor/pet_service.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/search_view_filter.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
@@ -27,7 +28,7 @@ class RequestsPageState extends State<RequestsPage> {
 
   void updateRequestList(int petId){
     setState(() {
-      adoptionRequestsFuture = PetService().getAdoptionRequestsForPet(petId);
+      adoptionRequestsFuture = PetRequest().getAdoptionRequestsForPet(petId);
     });
   }
 
@@ -69,7 +70,7 @@ class RequestsPageState extends State<RequestsPage> {
             child: Card(
               elevation: 5,
               child: ListTile(
-                leading: CircleAvatar(
+                leading: const CircleAvatar(
                   backgroundColor: Colors.blue,
                   child: Icon(Icons.pets, color: Colors.white),
                 ),
@@ -94,7 +95,7 @@ class RequestsPageState extends State<RequestsPage> {
   // Muestra un diálogo con la lista de usuarios que han solicitado la adopción de la mascota.
   Future<void> showAdoptionRequestsDialog(BuildContext context, int petId, int userId, Function updateRequestList) async {
     try{
-      final List <String> adoptionRequests = await PetService().getAdoptionRequestsForPet(petId);
+      final List <String> adoptionRequests = await PetRequest().getAdoptionRequestsForPet(petId);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -107,9 +108,9 @@ class RequestsPageState extends State<RequestsPage> {
                   title: Text(username),
                   trailing: IconButton(
                     onPressed: () async{
-                      int? requestId = await PetService().getAdoptionRequestId(petId, username);
+                      int? requestId = await PetRequest().getAdoptionRequestId(petId, username);
                       if (requestId != null){
-                        bool deleted = await PetService().deleteAdoptionRequest(requestId);
+                        bool deleted = await PetRequest().deleteAdoptionRequest(requestId);
                         if(deleted){
                           RequestsPageState? requestsPageState = context.findAncestorStateOfType<RequestsPageState>();
                           if (requestsPageState != null) {

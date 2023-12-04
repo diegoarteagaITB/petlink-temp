@@ -4,6 +4,7 @@ import 'package:petlink_flutter_app/app_pages/home_page_main.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/custom_textfield.dart';
 import 'package:petlink_flutter_app/database/connection/connection.dart';
 import 'package:petlink_flutter_app/database/dao/users_dao.dart';
+import 'package:petlink_flutter_app/global_variables.dart';
 import 'package:petlink_flutter_app/model/users_model.dart';
 import 'register_page.dart';
 
@@ -101,6 +102,9 @@ class _LoginPageState extends State<LoginPage> {
                             fullName: userName, email: email, userId: userId),
                       ),
                     );
+                    loggedUserEmail = email;
+                    loggedUserName = userName;
+                    userId = userId;
                   } else {
                     debugPrint('Credenciales incorrectas');
                   }

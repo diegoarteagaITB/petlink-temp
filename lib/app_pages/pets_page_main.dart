@@ -4,11 +4,13 @@ import 'dart:typed_data';
 
 import 'package:cached_memory_image/cached_memory_image.dart';
 import 'package:flutter/material.dart';
+import 'package:petlink_flutter_app/api/ktor/authentication_service.dart';
 import 'package:petlink_flutter_app/api/ktor/pet_service.dart';
 import 'package:petlink_flutter_app/api/supabase/supabase_service.dart';
 import 'package:petlink_flutter_app/app_pages/pet_detail_page.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/search_view_filter.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
+import 'package:petlink_flutter_app/model/users_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PetsPage extends StatefulWidget {
@@ -23,18 +25,24 @@ class PetsPage extends StatefulWidget {
 
 class _PetsPageState extends State<PetsPage> {
   late Future<List<Pet>> petsFuture;
-  bool buttonPressed = false;
 
   @override
   void initState() {
     super.initState();
     petsFuture = PetService().getPetsInAdoption();
   }
-  // Color.fromARGB(255, 4, 40, 71)
 
   double opacity = 1.0;
   final supabase = Supabase.instance.client;
   final supaService = SupabaseService();
+
+  List<String> listOfImageNameFilters = [
+    "dog_widget.png",
+    "cat_widget.png",
+    "bird_widget.png",
+    "felidae_widget.png",
+    "fish_widget.png"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -64,92 +72,25 @@ class _PetsPageState extends State<PetsPage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Ink(
-                      width: 85,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        image: const DecorationImage(
-                            image: AssetImage('assets/images/dog_widget.png'),
-                            fit: BoxFit.fill),
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue.withOpacity(opacity),
+                for (var i = 0; i < 4; i++)
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: InkWell(
+                      onTap: () {},
+                      child: Ink(
+                        width: 85,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage(
+                                  'assets/images/${listOfImageNameFilters[i]}'),
+                              fit: BoxFit.fill),
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.blue.withOpacity(opacity),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Ink(
-                      width: 85,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        image: const DecorationImage(
-                            image: AssetImage('assets/images/cat_widget.png'),
-                            fit: BoxFit.fill),
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue.withOpacity(opacity),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Ink(
-                      width: 85,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        image: const DecorationImage(
-                            image: AssetImage('assets/images/bird_widget.png'),
-                            fit: BoxFit.fill),
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue.withOpacity(opacity),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Ink(
-                      width: 85,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        image: const DecorationImage(
-                            image:
-                                AssetImage('assets/images/felidae_widget.png'),
-                            fit: BoxFit.fill),
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue.withOpacity(opacity),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Ink(
-                      width: 85,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        image: const DecorationImage(
-                            image: AssetImage('assets/images/fish_widget.png'),
-                            fit: BoxFit.fill),
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blue.withOpacity(opacity),
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -199,11 +140,18 @@ class _PetsPageState extends State<PetsPage> {
           return Padding(
             padding: const EdgeInsets.all(8),
             child: GestureDetector(
-              onTap: () {
+              onTap: () async {
+                Users fullUser =
+                    await AuthService().getUserByUserId(pet.userId);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PetDetailPage(pet: pet),
+                    builder: (context) => PetDetailPage(
+                      pet: pet,
+                      userId: widget.userId,
+                      fullName: widget.fullName,
+                      fullUser: fullUser,
+                    ),
                   ),
                 );
               },
@@ -254,46 +202,6 @@ class _PetsPageState extends State<PetsPage> {
                         ],
                       ),
                     ),
-                    if (pet.inAdoption)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: SizedBox(
-                          width: 70,
-                          height: 30,
-                          child: TextButton(
-                            onPressed: () async {
-                              final success = await PetService()
-                                  .sendAdoptionRequest(widget.userId, pet.petId, widget.fullName);
-                              if (success) {
-                                print('Adoption request sent');
-                                setState(() {
-                                  buttonPressed = true;
-                                });
-                              } else {
-                                print('Failed to send request');
-                              }
-                            },
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateColor.resolveWith((states) {
-                                if (buttonPressed) {
-                                  return Colors.transparent;
-                                } else {
-                                  return Colors.white;
-                                }
-                              }),
-                            ),
-                            child: const Text(
-                              "Adopt",
-                              style: TextStyle(
-                                fontFamily: 'BalooDa2',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                   ],
                 ),
               ),
