@@ -7,10 +7,11 @@ import 'package:petlink_flutter_app/app_pages/pets_page_main.dart';
 import 'package:petlink_flutter_app/app_pages/user_home_page.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.fullName, required this.email, required this.userId});
+  const MyHomePage({super.key, required this.fullName, required this.email,required this.userId});
 
-  final String fullName;
+ 
   final String email;
+  final String fullName;
   final int userId;
 
   @override

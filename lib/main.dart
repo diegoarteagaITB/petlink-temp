@@ -16,7 +16,7 @@ void main() async {
 }
 
 final supabase = Supabase.instance.client;
-const String ipAddress = "http://192.168.1.31:8080";
+const String ipAddress = "http://192.168.1.116:8080";
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

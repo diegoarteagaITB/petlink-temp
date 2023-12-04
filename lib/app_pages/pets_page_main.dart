@@ -14,6 +14,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class PetsPage extends StatefulWidget {
   final int userId;
   final String fullName;
+ 
   const PetsPage({super.key, required this.userId, required this.fullName});
 
   @override
@@ -262,8 +263,7 @@ class _PetsPageState extends State<PetsPage> {
                           child: TextButton(
                             onPressed: () async {
                               final success = await PetService()
-                                  .sendAdoptionRequest(widget.userId, pet.petId,
-                                      widget.fullName);
+                                  .sendAdoptionRequest(widget.userId, pet.petId, widget.fullName);
                               if (success) {
                                 print('Adoption request sent');
                                 setState(() {
