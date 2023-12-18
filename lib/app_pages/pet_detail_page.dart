@@ -3,11 +3,13 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import 'package:petlink_flutter_app/api/ktor/petRequest_service.dart';
+import 'package:petlink_flutter_app/api/ktor/pet_service.dart';
 
 import 'package:petlink_flutter_app/api/supabase/supabase_service.dart';
+import 'package:petlink_flutter_app/global_variables.dart';
+
 import 'package:petlink_flutter_app/model/pets_model.dart';
 import 'package:petlink_flutter_app/model/users_model.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PetDetailPage extends StatefulWidget {
   const PetDetailPage(
@@ -15,12 +17,14 @@ class PetDetailPage extends StatefulWidget {
       required this.pet,
       required this.fullName,
       required this.userId,
-      required this.fullUser});
+      required this.fullUser,
+      required this.myPetsPageComes});
 
   final int userId;
   final String fullName;
   final Users fullUser;
   final Pet pet;
+  final bool myPetsPageComes;
 
   @override
   State<PetDetailPage> createState() => _PetDetailPageState();
@@ -31,7 +35,79 @@ class _PetDetailPageState extends State<PetDetailPage> {
   List<String> listOfPetFeaturesValue = ["9999", "9999", "9999"];
 
   final supaService = SupabaseService();
-  bool buttonPressed = false;
+
+  Color buttonBgColor = const Color.fromARGB(255, 4, 40, 71);
+  String buttonHintText = "Give Up For Adoption";
+
+  @override
+  void initState() {
+    super.initState();
+    initializeButtonStyle();
+  }
+
+  Future<void> initializeButtonStyle() async {
+    if (widget.myPetsPageComes) {
+      if (!widget.pet.inAdoption) {
+        setButtonStyle(
+            const Color.fromARGB(255, 4, 40, 71), "Give Up For Adoption");
+      } else {
+        setButtonStyle(
+            const Color.fromARGB(255, 61, 0, 1), "Cancel de Adoption");
+      }
+    } else {
+      final exists = await PetRequest()
+          .existAdoptionRequest(widget.pet.petId, widget.pet.userId);
+
+      debugPrint(exists.toString() + "AaAaAaA");
+      if (exists) {
+        setButtonStyle(const Color.fromARGB(255, 61, 0, 1), "Cancel request");
+      } else {
+        setButtonStyle(
+            const Color.fromARGB(255, 4, 40, 71), "Request the adoption");
+      }
+    }
+  }
+
+  void setButtonStyle(Color bgColor, String hintText) {
+    setState(() {
+      buttonBgColor = bgColor;
+      buttonHintText = hintText;
+    });
+  }
+
+  void onPressed() async {
+    Color bgColor;
+    String hintText;
+
+    if (widget.myPetsPageComes) {
+      if (!widget.pet.inAdoption) {
+        bgColor = const Color.fromARGB(255, 61, 0, 1);
+        hintText = "Cancel the Adoption";
+        widget.pet.inAdoption = true;
+        await PetService().changeAdoptionStatus(widget.pet.petId, true);
+      } else {
+        bgColor = const Color.fromARGB(255, 4, 40, 71);
+        hintText = "Give Up For Adoption";
+        widget.pet.inAdoption = false;
+        await PetService().changeAdoptionStatus(widget.pet.petId, false);
+      }
+    } else {
+      final existsRequest = await PetRequest()
+          .existAdoptionRequest(widget.pet.petId, loggedUserId);
+      if (existsRequest) {
+        await PetRequest()
+            .deleteAdoptionRequest(loggedUserId, widget.pet.petId);
+        bgColor = const Color.fromARGB(255, 4, 40, 71);
+        hintText = "Request the adoption";
+      } else {
+        debugPrint(loggedUserId.toString() + widget.pet.petId.toString());
+        await PetRequest().sendAdoptionRequest(widget.pet.petId);
+        bgColor = const Color.fromARGB(255, 61, 0, 1);
+        hintText = "Cancel request";
+      }
+    }
+    setButtonStyle(bgColor, hintText);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +154,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
               width: MediaQuery.of(context).size.width,
               child: Padding(
                 padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.1, bottom: 10),
+                    top: MediaQuery.of(context).size.height * 0.13, bottom: 10),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -189,44 +265,6 @@ class _PetDetailPageState extends State<PetDetailPage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: TextButton(
-                          onPressed: () async {
-                            final success = await PetRequest()
-                                .sendAdoptionRequest(widget.userId,
-                                    widget.pet.petId, widget.fullName);
-                            if (success) {
-                              debugPrint('Adoption request sent');
-                              setState(() {
-                                buttonPressed = true;
-                              });
-                            } else {
-                              debugPrint('Failed to send request');
-                            }
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            height: 55,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(18),
-                              color: const Color.fromARGB(255, 4, 40, 71),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 14, horizontal: 10),
-                            child: const Text(
-                              'Adopt',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 21,
-                                fontFamily: 'BalooDa2',
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -286,7 +324,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10),
+                  padding: const EdgeInsets.only(top: 30, left: 30),
                   child: CircleAvatar(
                     radius: 20,
                     backgroundColor: const Color.fromARGB(119, 0, 0, 0),
@@ -306,6 +344,41 @@ class _PetDetailPageState extends State<PetDetailPage> {
             ],
           ),
         ],
+      ),
+      bottomNavigationBar: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildButton() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15.0),
+      child: TextButton(
+        onPressed: onPressed,
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: 45,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            color: buttonBgColor,
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          child: Text(
+            buttonHintText,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontFamily: 'BalooDa2',
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -39,11 +39,7 @@ class AuthService {
   Future<bool> userRegister(Users user) async {
     final url = Uri.parse('$ipAddress/users');
 
-    debugPrint("Password decrypt: ${user.password}");
-
     var encrpytedPassword = encryptPassword(user.password);
-
-    debugPrint("Password encrypt: $encrpytedPassword");
 
     try {
       final response = await http.post(
@@ -117,8 +113,6 @@ class AuthService {
       throw Exception('Failed to load user');
     }
   }
-
-  
 
   // Funcion para encriptar la contraseña
   String encryptPassword(String password) {

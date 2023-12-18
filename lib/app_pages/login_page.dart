@@ -95,6 +95,11 @@ class _LoginPageState extends State<LoginPage> {
                   if (connection != null) {
                     var userName = await userService.getNameByEmail(email);
                     var userId = await userService.getUserIdByEmail(email);
+
+                    loggedUserEmail = email;
+                    loggedUserName = userName;
+                    loggedUserId = userId;
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -102,9 +107,6 @@ class _LoginPageState extends State<LoginPage> {
                             fullName: userName, email: email, userId: userId),
                       ),
                     );
-                    loggedUserEmail = email;
-                    loggedUserName = userName;
-                    userId = userId;
                   } else {
                     debugPrint('Credenciales incorrectas');
                   }

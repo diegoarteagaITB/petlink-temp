@@ -83,10 +83,12 @@ class _MyPetsPageState extends State<MyPetsPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => PetDetailPage(
-                        pet: pet,
-                        userId: widget.userId,
-                        fullName: loggedUserName,
-                        fullUser: fullUser),
+                      pet: pet,
+                      userId: widget.userId,
+                      fullName: loggedUserName,
+                      fullUser: fullUser,
+                      myPetsPageComes: true,
+                    ),
                   ),
                 );
               },

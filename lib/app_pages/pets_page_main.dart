@@ -16,7 +16,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class PetsPage extends StatefulWidget {
   final int userId;
   final String fullName;
- 
+
   const PetsPage({super.key, required this.userId, required this.fullName});
 
   @override
@@ -141,6 +141,7 @@ class _PetsPageState extends State<PetsPage> {
             padding: const EdgeInsets.all(8),
             child: GestureDetector(
               onTap: () async {
+                debugPrint(pet.userId.toString());
                 Users fullUser =
                     await AuthService().getUserByUserId(pet.userId);
                 Navigator.push(
@@ -151,6 +152,7 @@ class _PetsPageState extends State<PetsPage> {
                       userId: widget.userId,
                       fullName: widget.fullName,
                       fullUser: fullUser,
+                      myPetsPageComes: false,
                     ),
                   ),
                 );

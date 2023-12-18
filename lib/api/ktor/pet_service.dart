@@ -66,7 +66,7 @@ class PetService {
     }
   }
 
-// Funcion que crea una mascota
+  // Funcion que crea una mascota
   Future<bool> postPet(Pet pet) async {
     final url = Uri.parse('$ipAddress/pets');
 
@@ -93,7 +93,21 @@ class PetService {
         return false;
       }
     } catch (e) {
-      debugPrint('Error en la solicitud: $e');
+      return false;
+    }
+  }
+
+  // Funcion que cambia el booleano de adopcion de true a false y viceversa
+  Future<bool> changeAdoptionStatus(int petId, bool newStatus) async {
+    final url = Uri.parse('$ipAddress/pets/$petId/adoption/$newStatus');
+
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      return response.body.toLowerCase() == "true";
+    } else {
       return false;
     }
   }

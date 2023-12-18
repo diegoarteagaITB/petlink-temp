@@ -18,7 +18,7 @@ class RequestsPage extends StatefulWidget {
 class RequestsPageState extends State<RequestsPage> {
   late Future<List<Pet>> petsFuture;
   late Future<List<String>> adoptionRequestsFuture;
-  
+
   @override
   void initState() {
     super.initState();
@@ -26,7 +26,7 @@ class RequestsPageState extends State<RequestsPage> {
     petsFuture = PetService().getPetsByUserId(widget.userId);
   }
 
-  void updateRequestList(int petId){
+  void updateRequestList(int petId) {
     setState(() {
       adoptionRequestsFuture = PetRequest().getAdoptionRequestsForPet(petId);
     });
@@ -63,7 +63,8 @@ class RequestsPageState extends State<RequestsPage> {
         final pet = pets[index];
         return GestureDetector(
           onTap: () {
-            showAdoptionRequestsDialog(context, pet.petId, widget.userId, updateRequestList);
+            showAdoptionRequestsDialog(
+                context, pet.petId, widget.userId, updateRequestList);
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -75,7 +76,6 @@ class RequestsPageState extends State<RequestsPage> {
                   child: Icon(Icons.pets, color: Colors.white),
                 ),
                 title: Text(pet.name),
-                
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -83,7 +83,6 @@ class RequestsPageState extends State<RequestsPage> {
                     Text(pet.castrated ? 'Castrated' : 'Not castrated'),
                   ],
                 ),
-                
               ),
             ),
           ),
@@ -93,9 +92,11 @@ class RequestsPageState extends State<RequestsPage> {
   }
 
   // Muestra un diálogo con la lista de usuarios que han solicitado la adopción de la mascota.
-  Future<void> showAdoptionRequestsDialog(BuildContext context, int petId, int userId, Function updateRequestList) async {
-    try{
-      final List <String> adoptionRequests = await PetRequest().getAdoptionRequestsForPet(petId);
+  Future<void> showAdoptionRequestsDialog(BuildContext context, int petId,
+      int userId, Function updateRequestList) async {
+    try {
+      final List<String> adoptionRequests =
+          await PetRequest().getAdoptionRequestsForPet(petId);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -104,47 +105,48 @@ class RequestsPageState extends State<RequestsPage> {
             content: Column(
               children: [
                 for (String username in adoptionRequests)
-                ListTile(
-                  title: Text(username),
-                  trailing: IconButton(
-                    onPressed: () async{
-                      int? requestId = await PetRequest().getAdoptionRequestId(petId, username);
-                      if (requestId != null){
-                        bool deleted = await PetRequest().deleteAdoptionRequest(requestId);
-                        if(deleted){
-                          RequestsPageState? requestsPageState = context.findAncestorStateOfType<RequestsPageState>();
-                          if (requestsPageState != null) {
-                            requestsPageState.updateRequestList(petId);
-                          } else{
-                            print('Failed to find RequestsPageState');
+                  ListTile(
+                    title: Text(username),
+                    trailing: IconButton(
+                      onPressed: () async {
+                        int? requestId = await PetRequest()
+                            .getAdoptionRequestId(petId, username);
+                        if (requestId != null) {
+                          bool deleted = await PetRequest()
+                              .deleteAdoptionRequest(userId, petId);
+                          if (deleted) {
+                            RequestsPageState? requestsPageState = context
+                                .findAncestorStateOfType<RequestsPageState>();
+                            if (requestsPageState != null) {
+                              requestsPageState.updateRequestList(petId);
+                            } else {
+                              print('Failed to find RequestsPageState');
+                            }
+                          } else {
+                            print('Failed to delete adoption request');
                           }
-                        } else{
-                          print('Failed to delete adoption request');
+                        } else {
+                          print('Failed to get adoption request id');
                         }
-                      } else{
-                        print('Failed to get adoption request id');
-                      }
-                    },
-                    icon: Icon(Icons.delete),
+                      },
+                      icon: Icon(Icons.delete),
+                    ),
                   ),
-                ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close'),
+              ],
             ),
-          ],
-        );
-      },
-    );
-  } catch(e){
-    print("Error cargar solicitudes de adopcion: $e");
-  }
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      print("Error cargar solicitudes de adopcion: $e");
+    }
   }
 }
-
-  

@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 final supabase = Supabase.instance.client;
 
 // IpAddress to connect with API
-const String ipAddress = "http://172.30.1.15:8080";
+const String ipAddress = "http://172.30.4.133:8080";
 
 // User logged variables
 

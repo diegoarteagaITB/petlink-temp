@@ -33,40 +33,36 @@ class _UserHomePageState extends State<UserHomePage> {
       theme: ThemeData(fontFamily: 'BalooDa2'),
       home: Scaffold(
         appBar: AppBar(
-            elevation: 0,
-            backgroundColor: const Color.fromARGB(255, 3, 25, 44),
-            toolbarHeight: 82,
-            leadingWidth: 110,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            leading: Padding(
-              padding: const EdgeInsets.only(left: 25, bottom: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Hello,",
-                    style: TextStyle(
+          elevation: 0,
+          backgroundColor: const Color.fromARGB(255, 3, 25, 44),
+          toolbarHeight: 82,
+          leadingWidth: 110,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 25, bottom: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Hello,",
+                  style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextScroll(
-                    '${widget.fullName}          ',
-                    style: const TextStyle(fontSize: 15),
-                    mode: TextScrollMode.endless,
-                    pauseBetween: const Duration(milliseconds: 500),
-                    velocity: const Velocity(pixelsPerSecond: Offset(20, 0)),
-                  )
-                ],
-              ),
+                      color: Colors.white),
+                ),
+                TextScroll(
+                  '${widget.fullName}          ',
+                  style: const TextStyle(fontSize: 15, color: Colors.white),
+                  mode: TextScrollMode.endless,
+                  pauseBetween: const Duration(milliseconds: 500),
+                  velocity: const Velocity(pixelsPerSecond: Offset(20, 0)),
+                )
+              ],
             ),
-            actions: [
-              IconButton(
-                  onPressed: () => exitFullScreen(),
-                  icon: const Icon(Icons.person))
-            ]),
+          ),
+        ),
         backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.only(top: 15, bottom: 15),
