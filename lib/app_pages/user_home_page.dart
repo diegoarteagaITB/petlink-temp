@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:petlink_flutter_app/app_pages/mypets_page.dart';
 import 'package:petlink_flutter_app/app_pages/requests_page.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/dialog_add_pet.dart';

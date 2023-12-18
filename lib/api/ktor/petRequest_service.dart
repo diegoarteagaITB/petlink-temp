@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:petlink_flutter_app/global_variables.dart';
 import 'package:petlink_flutter_app/main.dart';
+import 'package:petlink_flutter_app/model/adoption_request_model.dart';
 
 class PetRequest {
   Future<bool> sendAdoptionRequest(int petId) async {
@@ -29,17 +30,19 @@ class PetRequest {
   }
 
   // Obtiene la lista de usuarios que han solicitado la adopción de una mascota específica.
-  Future<List<String>> getAdoptionRequestsForPet(int petId) async {
+  Future<List<AdoptionRequests>> getAdoptionRequestsForPet(int petId) async {
     final response = await http.get(
       Uri.parse('$ipAddress/pets/adoptionrequests/$petId'),
       headers: {"Content-Type": "application/json"},
     );
 
-    print(response.body);
-
     if (response.statusCode == 200) {
-      final List<String> body = List<String>.from(json.decode(response.body));
-      return body;
+      final List<dynamic> jsonData = json.decode(response.body);
+
+      final List<AdoptionRequests> adoptionRequestsList =
+          jsonData.map((json) => AdoptionRequests.fromJson(json)).toList();
+
+      return adoptionRequestsList;
     } else {
       throw Exception('Failed to load adoption requests');
     }

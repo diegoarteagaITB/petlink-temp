@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:petlink_flutter_app/api/supabase/supabase_service.dart';
-import 'package:petlink_flutter_app/app_pages/home_page_main.dart';
 import 'package:petlink_flutter_app/app_pages/login_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

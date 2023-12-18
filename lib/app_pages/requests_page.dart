@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:petlink_flutter_app/api/ktor/petRequest_service.dart';
 import 'package:petlink_flutter_app/api/ktor/pet_service.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/search_view_filter.dart';
+import 'package:petlink_flutter_app/model/adoption_request_model.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,7 +18,7 @@ class RequestsPage extends StatefulWidget {
 
 class RequestsPageState extends State<RequestsPage> {
   late Future<List<Pet>> petsFuture;
-  late Future<List<String>> adoptionRequestsFuture;
+  late Future<List<AdoptionRequests>> adoptionRequestsFuture;
 
   @override
   void initState() {
@@ -95,16 +96,16 @@ class RequestsPageState extends State<RequestsPage> {
   Future<void> showAdoptionRequestsDialog(BuildContext context, int petId,
       int userId, Function updateRequestList) async {
     try {
-      final List<String> adoptionRequests =
+      final List<AdoptionRequests> adoptionRequests =
           await PetRequest().getAdoptionRequestsForPet(petId);
-      showDialog(
+      /*showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Adoption Requests'),
             content: Column(
               children: [
-                for (String username in adoptionRequests)
+                for (AdoptionRequests username in adoptionRequests)
                   ListTile(
                     title: Text(username),
                     trailing: IconButton(
@@ -144,7 +145,7 @@ class RequestsPageState extends State<RequestsPage> {
             ],
           );
         },
-      );
+      );*/
     } catch (e) {
       print("Error cargar solicitudes de adopcion: $e");
     }
