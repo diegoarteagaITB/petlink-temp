@@ -93,12 +93,60 @@ class RequestsPageState extends State<RequestsPage> {
   }
 
   // Muestra un diálogo con la lista de usuarios que han solicitado la adopción de la mascota.
-  Future<void> showAdoptionRequestsDialog(BuildContext context, int petId,
-      int userId, Function updateRequestList) async {
-    try {
-      final List<AdoptionRequests> adoptionRequests =
-          await PetRequest().getAdoptionRequestsForPet(petId);
-      /*showDialog(
+  Future<void> showAdoptionRequestsDialog(
+  BuildContext context, 
+  int petId,
+  int userId, 
+  Function updateRequestList
+) async {
+  try {
+    final List<AdoptionRequests> adoptionRequests =
+        await PetRequest().getAdoptionRequestsForPet(petId);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Adoption Requests'),
+          content: Column(
+            children: [
+              for (var request in adoptionRequests)
+                ListTile(
+                  title: Text('User ID: ${request.requesting_user_id}'),
+                  subtitle: Text('Request ID: ${request.request_id}'),
+                  trailing: ElevatedButton(
+                    onPressed: () async {
+                      final success = await PetService().updateOwnerPet(petId, request.requesting_user_id);
+                      if (success) {
+                        updateRequestList(petId);
+                        Navigator.pop(context); // Cerrar el diálogo después de la confirmación
+                      } else {
+                        // Manejar error si la actualización falla
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Failed to update owner'),
+                          ),
+                        );
+                      }
+                    },
+                    child: Text('Confirm Adoption'),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+
+  } catch (e) {
+    print("Error cargar solicitudes de adopcion: $e");
+  }
+}
+}
+
+
+
+/*showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -146,8 +194,3 @@ class RequestsPageState extends State<RequestsPage> {
           );
         },
       );*/
-    } catch (e) {
-      print("Error cargar solicitudes de adopcion: $e");
-    }
-  }
-}
