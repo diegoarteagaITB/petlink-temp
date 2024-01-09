@@ -111,4 +111,19 @@ class PetService {
       return false;
     }
   }
+
+
+  // Funcion confirmación de adopción
+  Future<bool> updateOwnerPet(int petId, int userId) async{
+    final url = Uri.parse('$ipAddress/pets/$petId/adoption/$userId');
+    final response = await http.put(url, headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      return response.body.toLowerCase() == "true";
+    } else {
+      return false;
+    }
+  }
+  
+  
 }
