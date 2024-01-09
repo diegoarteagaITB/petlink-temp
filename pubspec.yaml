@@ -50,6 +50,7 @@ dependencies:
   cached_memory_image: ^1.5.0
   dropdown_button2: ^2.3.9
   flutter_image_compress: ^2.1.0
+  animated_custom_dropdown: ^2.0.0
 
 dev_dependencies:
   flutter_test:

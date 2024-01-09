@@ -24,7 +24,6 @@ class _MyPetsPageState extends State<MyPetsPage> {
   @override
   void initState() {
     super.initState();
-    print("UserId --->>>>>> ${widget.userId}");
     petsFuture = PetService().getPetsByUserId(widget.userId);
   }
 
@@ -53,7 +52,6 @@ class _MyPetsPageState extends State<MyPetsPage> {
   }
 
   Widget buildPets(List<Pet> pets) {
-    print('Numbeeerrr of peeets ------->>>>>>>> ${pets.length}');
     return ListView.builder(
       itemCount: pets.length,
       itemBuilder: (context, index) {
@@ -63,8 +61,7 @@ class _MyPetsPageState extends State<MyPetsPage> {
           child: Card(
             elevation: 5,
             child: ListTile(
-              leading: CircleAvatar(
-                // Puedes usar una imagen en lugar de un color
+              leading: const CircleAvatar(
                 backgroundColor: Colors.blue,
                 child: Icon(Icons.pets, color: Colors.white),
               ),

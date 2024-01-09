@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
             seedColor: const Color.fromRGBO(1, 98, 94, 1.0)),
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: const LoginPage(),
     );
   }
 }

@@ -1,153 +1,186 @@
-import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:petlink_flutter_app/api/ktor/petRequest_service.dart';
 import 'package:petlink_flutter_app/api/ktor/pet_service.dart';
-import 'package:petlink_flutter_app/app_pages/widgets/search_view_filter.dart';
-import 'package:petlink_flutter_app/model/adoption_request_model.dart';
+import 'package:petlink_flutter_app/app_pages/widgets/build_pet_image.dart';
+import 'package:petlink_flutter_app/global_variables.dart';
 import 'package:petlink_flutter_app/model/pets_model.dart';
-import 'package:http/http.dart' as http;
+import 'package:text_scroll/text_scroll.dart';
 
 class RequestsPage extends StatefulWidget {
-  final int userId;
-  const RequestsPage({Key? key, required this.userId}) : super(key: key);
+  const RequestsPage({Key? key}) : super(key: key);
 
   @override
   RequestsPageState createState() => RequestsPageState();
 }
 
+class AdoptionRequest {
+  int requestId;
+  int petId;
+  String requesterName;
+
+  AdoptionRequest({
+    required this.requestId,
+    required this.petId,
+    required this.requesterName,
+  });
+}
+
 class RequestsPageState extends State<RequestsPage> {
-  late Future<List<Pet>> petsFuture;
-  late Future<List<AdoptionRequests>> adoptionRequestsFuture;
+  late Future<List<Pet>> userPetList;
+  int? selectedPetId;
 
   @override
   void initState() {
     super.initState();
-    print("UserId --->>>>>> ${widget.userId}");
-    petsFuture = PetService().getPetsByUserId(widget.userId);
-  }
-
-  void updateRequestList(int petId) {
-    setState(() {
-      adoptionRequestsFuture = PetRequest().getAdoptionRequestsForPet(petId);
-    });
+    userPetList = PetService().getPetsByUserId(loggedUserId);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('My Requests'),
-      ),
-      body: FutureBuilder<List<Pet>>(
-        future: petsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            final pets = snapshot.data!;
-            return buildPets(pets);
-          } else {
-            return Center(child: Text('No pets available'));
-          }
-        },
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Pet Adoption Request'),
+        ),
+        body: FutureBuilder<List<Pet>>(
+          future: userPetList,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              final pets = snapshot.data!;
+              return buildPetsAndRequestByPet(pets);
+            } else {
+              return const Center(child: Text('No pets available'));
+            }
+          },
+        ));
   }
 
-  Widget buildPets(List<Pet> pets) {
-    return ListView.builder(
+  List<AdoptionRequest> adoptionRequests = [
+    AdoptionRequest(requestId: 1, petId: 41, requesterName: 'User1'),
+    AdoptionRequest(requestId: 2, petId: 41, requesterName: 'User2'),
+    AdoptionRequest(requestId: 3, petId: 41, requesterName: 'User3'),
+  ];
+
+  Widget buildPetsAndRequestByPet(List<Pet> pets) {
+    return GridView.builder(
+      gridDelegate:
+          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemCount: pets.length,
       itemBuilder: (context, index) {
-        final pet = pets[index];
-        return GestureDetector(
-          onTap: () {
-            showAdoptionRequestsDialog(
-                context, pet.petId, widget.userId, updateRequestList);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              elevation: 5,
-              child: ListTile(
-                leading: const CircleAvatar(
-                  backgroundColor: Colors.blue,
-                  child: Icon(Icons.pets, color: Colors.white),
-                ),
-                title: Text(pet.name),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(pet.breed),
-                    Text(pet.castrated ? 'Castrated' : 'Not castrated'),
-                  ],
+        Pet pet = pets[index];
+        bool isSelected = selectedPetId == pet.petId;
+        List<AdoptionRequest> petAdoptionRequests = adoptionRequests
+            .where((request) => request.petId == pet.petId)
+            .toList();
+
+        return Column(
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() {
+                  selectedPetId = pet.petId;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Container(
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: selectedPetId == pet.petId
+                        ? const Color.fromARGB(255, 6, 55, 99)
+                        : const Color.fromARGB(255, 4, 40, 71),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        pet.name,
+                        style: const TextStyle(
+                            fontFamily: 'BalooDa2',
+                            fontSize: 17,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      TextScroll(
+                        'Toca para ver las solicitudes de esta mascota          ',
+                        style:
+                            const TextStyle(fontSize: 15, color: Colors.white),
+                        mode: TextScrollMode.endless,
+                        pauseBetween: const Duration(milliseconds: 500),
+                        velocity:
+                            const Velocity(pixelsPerSecond: Offset(20, 0)),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
+            if (isSelected)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (AdoptionRequest request in petAdoptionRequests)
+                    Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Center(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.90,
+                          height: 40,
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: selectedPetId == pet.petId
+                                ? const Color.fromARGB(255, 6, 55, 99)
+                                : const Color.fromARGB(255, 4, 40, 71),
+                          ),
+                          child: Center(
+                            child: Text(
+                              request.requesterName,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'BalooDa2',
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (petAdoptionRequests.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Center(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.90,
+                          height: 40,
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: selectedPetId == pet.petId
+                                ? const Color.fromARGB(255, 6, 55, 99)
+                                : const Color.fromARGB(255, 4, 40, 71),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Todavía no hay solicitudes',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'BalooDa2',
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+          ],
         );
       },
     );
-  }
-
-  // Muestra un diálogo con la lista de usuarios que han solicitado la adopción de la mascota.
-  Future<void> showAdoptionRequestsDialog(BuildContext context, int petId,
-      int userId, Function updateRequestList) async {
-    try {
-      final List<AdoptionRequests> adoptionRequests =
-          await PetRequest().getAdoptionRequestsForPet(petId);
-      /*showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Adoption Requests'),
-            content: Column(
-              children: [
-                for (AdoptionRequests username in adoptionRequests)
-                  ListTile(
-                    title: Text(username),
-                    trailing: IconButton(
-                      onPressed: () async {
-                        int? requestId = await PetRequest()
-                            .getAdoptionRequestId(petId, username);
-                        if (requestId != null) {
-                          bool deleted = await PetRequest()
-                              .deleteAdoptionRequest(userId, petId);
-                          if (deleted) {
-                            RequestsPageState? requestsPageState = context
-                                .findAncestorStateOfType<RequestsPageState>();
-                            if (requestsPageState != null) {
-                              requestsPageState.updateRequestList(petId);
-                            } else {
-                              print('Failed to find RequestsPageState');
-                            }
-                          } else {
-                            print('Failed to delete adoption request');
-                          }
-                        } else {
-                          print('Failed to get adoption request id');
-                        }
-                      },
-                      icon: Icon(Icons.delete),
-                    ),
-                  ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Close'),
-              ),
-            ],
-          );
-        },
-      );*/
-    } catch (e) {
-      print("Error cargar solicitudes de adopcion: $e");
-    }
   }
 }
