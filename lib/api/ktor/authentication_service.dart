@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:petlink_flutter_app/global_variables.dart';
 import 'package:petlink_flutter_app/main.dart';
+import 'package:petlink_flutter_app/model/additional_info_model.dart';
 import 'package:petlink_flutter_app/model/users_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -120,4 +121,62 @@ class AuthService {
     final hash = sha256.convert(bytes);
     return hash.toString();
   }
+
+ Future<List<AdditionalUserInfo>> getAdditionalUserInfoByUserId(int userId) async {
+  final response = await http.get(
+    Uri.parse('$ipAddress/additionalinfo/$userId'), 
+    headers: {"Content-Type": "application/json"},
+  );
+
+  print(response.body);
+  debugPrint("aaaaaaaaaaaaaaaaaaaaaaaa23456 " + response.body);
+
+  if (response.statusCode == 200) {
+    List<dynamic> responseBody = json.decode(response.body);
+
+    List<AdditionalUserInfo> additionalUserInfos = responseBody.map((userInfoMap) {
+      return AdditionalUserInfo.fromJson(userInfoMap);
+    }).toList();
+
+    return additionalUserInfos;
+  } else {
+    throw Exception('Fallo al cargar información adicional del usuario');
+  }
+}
+
+
+ Future<bool> updateAdditionalUserInfo(
+    int idUser,
+    int age,
+    String city,
+    String slogan,
+    String description,
+    bool foster,
+  ) async {
+    final url = Uri.parse('$ipAddress/additionalinfo/$idUser');
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'idUser': idUser,
+          'age': age,
+          'city': city,
+          'slogan': slogan,
+          'description': description,
+          'foster': foster,
+        }),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print('Error en la solicitud: $e');
+      return false;
+    }
+  }
+
 }

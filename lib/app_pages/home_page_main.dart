@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
         email: widget.email,
         userId: userId,
       ),
-      const AccountPage(),
+      AccountPage(userId: userId),
     ];
   }
 
