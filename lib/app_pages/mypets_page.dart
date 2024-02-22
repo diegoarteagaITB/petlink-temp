@@ -57,7 +57,7 @@ class _MyPetsPageState extends State<MyPetsPage> {
       itemBuilder: (context, index) {
         final pet = pets[index];
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding:  const EdgeInsets.all(8.0),
           child: Card(
             elevation: 5,
             child: ListTile(

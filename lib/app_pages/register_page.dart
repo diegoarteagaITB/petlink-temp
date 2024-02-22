@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:petlink_flutter_app/api/ktor/authentication_service.dart';
 import 'package:petlink_flutter_app/app_pages/home_page_main.dart';
 import 'package:petlink_flutter_app/app_pages/widgets/custom_textfield.dart';
-import 'package:petlink_flutter_app/database/connection/connection.dart';
 import 'package:petlink_flutter_app/database/dao/users_dao.dart';
 import 'package:petlink_flutter_app/global_variables.dart';
 import 'package:petlink_flutter_app/model/users_model.dart';
@@ -17,13 +16,12 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final myDatabase = Database();
+  
   final userService = AuthService();
 
   @override
   void initState() {
     super.initState();
-    myDatabase.createConnection();
   }
 
   bool passwordVisible = false;

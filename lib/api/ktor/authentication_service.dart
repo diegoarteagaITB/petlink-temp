@@ -122,61 +122,61 @@ class AuthService {
     return hash.toString();
   }
 
- Future<List<AdditionalUserInfo>> getAdditionalUserInfoByUserId(int userId) async {
+  Future<AdditionalUserInfo> getAdditionalUserInfoByUserId(int userId) async {
   final response = await http.get(
-    Uri.parse('$ipAddress/additionalinfo/$userId'), 
+    Uri.parse('$ipAddress/additionalInfoUser/$userId'), 
     headers: {"Content-Type": "application/json"},
   );
 
   print(response.body);
-  debugPrint("aaaaaaaaaaaaaaaaaaaaaaaa23456 " + response.body);
+  debugPrint("HERE HERE - this is debug print from  Future<AdditionalUserInfo> getAdditionalUserInfoByUserId(int userId)  " + response.body);
 
   if (response.statusCode == 200) {
-    List<dynamic> responseBody = json.decode(response.body);
+    Map<String, dynamic> responseBody = json.decode(response.body);
 
-    List<AdditionalUserInfo> additionalUserInfos = responseBody.map((userInfoMap) {
-      return AdditionalUserInfo.fromJson(userInfoMap);
-    }).toList();
-
-    return additionalUserInfos;
+    AdditionalUserInfo additionalUserInfo = AdditionalUserInfo.fromJson(responseBody);
+    
+    return additionalUserInfo;
   } else {
     throw Exception('Fallo al cargar información adicional del usuario');
   }
 }
 
+Future<bool> updateAdditionalUserInfo(
+  int userId,
+  int age,
+  String city,
+  String slogan,
+  String description,
+  bool foster,
+  String imgId,
+) async {
+  final url = Uri.parse('$ipAddress/additionalInfoUser/$userId');
 
- Future<bool> updateAdditionalUserInfo(
-    int idUser,
-    int age,
-    String city,
-    String slogan,
-    String description,
-    bool foster,
-  ) async {
-    final url = Uri.parse('$ipAddress/additionalinfo/$idUser');
-
-    try {
-      final response = await http.put(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'idUser': idUser,
-          'age': age,
-          'city': city,
-          'slogan': slogan,
-          'description': description,
-          'foster': foster,
-        }),
-      );
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      print('Error en la solicitud: $e');
+  try {
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'userId': userId, // Asegúrate de incluir el campo userId
+        'age': age,
+        'city': city,
+        'slogan': slogan,
+        'description': description,
+        'foster': foster,
+        'imgId': imgId,        
+      }),
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
       return false;
     }
+  } catch (e) {
+    print('Error en la solicitud: $e');
+    return false;
   }
+}
+
 
 }

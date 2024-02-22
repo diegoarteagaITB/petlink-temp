@@ -84,6 +84,9 @@ flutter:
     - assets/images/fish_widget.png
     - assets/images/images_preview.png
     - assets/images/dog_placeholder.jpg
+    - assets/images/bird_pattern_backgrund.jpg
+    - assets/images/cats_pattern_background.png
+    - assets/images/dog_patterns_background.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
